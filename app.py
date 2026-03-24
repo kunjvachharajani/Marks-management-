@@ -1,9 +1,10 @@
 from flask import Flask, request, jsonify, render_template, session
 from supabase_client import supabase
 import functools
+import os
 
-app = Flask(__name__)
-app.secret_key = "marks_mgmt_secret_key_2024"
+app = Flask(__name__, template_folder=os.path.join(os.path.dirname(__file__), 'templates'))
+app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'marks_mgmt_secret_key_2024')
 
 # ══════════════════════════════════════════════════════
 #  HELPERS
