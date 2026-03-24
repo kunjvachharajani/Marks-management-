@@ -168,6 +168,77 @@
   .empty-state .big-icon { font-size: 48px; margin-bottom: 16px; opacity: .4; }
   .empty-state p { font-size: 14px; font-style: italic; }
 
+  /* ── ANIME MODELS ── */
+  .anime-section-label {
+    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--accent); margin: 28px 0 16px; padding-bottom: 8px;
+    border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px;
+  }
+  .anime-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 18px; margin-bottom: 28px;
+  }
+  .anime-card {
+    background: var(--surface2); border: 1px solid var(--border); border-radius: 4px;
+    padding: 22px 22px 18px; transition: border-color .2s, transform .2s;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .anime-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .anime-card-num {
+    font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent);
+    background: rgba(201,168,76,.1); border: 1px solid rgba(201,168,76,.25);
+    display: inline-block; padding: 3px 9px; border-radius: 2px; width: fit-content;
+  }
+  .anime-card-num.featured {
+    color: #e8c97a; background: rgba(201,168,76,.18); border-color: rgba(201,168,76,.5);
+  }
+  .anime-card.featured { border-color: rgba(201,168,76,.35); background: #1a1a14; }
+  .anime-card-title { font-size: 15px; color: var(--text); font-style: italic; line-height: 1.4; }
+  .anime-card-author { font-size: 12px; color: var(--muted); }
+  .anime-card-desc { font-size: 13px; color: #aaa; line-height: 1.6; flex: 1; }
+  .anime-card-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag {
+    font-size: 10px; letter-spacing: 1px; text-transform: uppercase;
+    padding: 3px 8px; border-radius: 2px; border: 1px solid var(--border); color: var(--muted);
+  }
+  .tag-free   { border-color: rgba(39,174,96,.4);  color: #2ecc71; background: rgba(39,174,96,.08); }
+  .tag-rigged { border-color: rgba(41,128,185,.4); color: #3498db; background: rgba(41,128,185,.08); }
+  .tag-blender{ border-color: rgba(230,126,34,.4); color: #e67e22; background: rgba(230,126,34,.08); }
+  .tag-unity  { border-color: rgba(201,168,76,.4); color: var(--accent); background: rgba(201,168,76,.08); }
+  .tag-lowpoly{ border-color: rgba(155,89,182,.4); color: #9b59b6; background: rgba(155,89,182,.08); }
+  .tag-base   { border-color: rgba(127,140,141,.4); color: #95a5a6; background: rgba(127,140,141,.08); }
+  .tag-naruto { border-color: rgba(255,165,0,.4); color: #ffa500; background: rgba(255,165,0,.08); }
+  .anime-card-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--accent); text-decoration: none; margin-top: 4px;
+    transition: color .2s;
+  }
+  .anime-card-link:hover { color: var(--accent2); }
+  .anime-tip-box {
+    background: rgba(201,168,76,.07); border: 1px solid rgba(201,168,76,.25);
+    border-radius: 4px; padding: 16px 20px; margin-top: 8px; margin-bottom: 28px;
+    font-size: 13px; color: #aaa; line-height: 1.7;
+  }
+  .anime-tip-box strong { color: var(--accent); }
+  .anime-collection-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px; margin-bottom: 28px;
+  }
+  .anime-collection-card {
+    background: var(--surface2); border: 1px solid var(--border); border-radius: 4px;
+    padding: 18px 20px; display: flex; flex-direction: column; gap: 8px;
+    transition: border-color .2s;
+  }
+  .anime-collection-card:hover { border-color: var(--accent); }
+  .anime-collection-card .col-title { font-size: 14px; color: var(--text); font-style: italic; }
+  .anime-collection-card .col-desc  { font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .anime-collection-card a {
+    font-size: 11px; letter-spacing: 1px; text-transform: uppercase;
+    color: var(--accent); text-decoration: none;
+  }
+  .anime-collection-card a:hover { color: var(--accent2); }
+
   @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 </style>
 </head>
@@ -240,6 +311,11 @@
           <div class="nav-subitem" onclick="showPage('check-grade', this)"><span>◉</span> Check Grade</div>
           <div class="nav-subitem" onclick="showPage('calc-average', this)"><span>∑</span> Calculate Average</div>
           <div class="nav-subitem" onclick="showPage('dashboard', document.getElementById('nav-dashboard'))" style="color:#555;font-size:11px;">↩ Back to Menu</div>
+        </div>
+
+        <!-- Anime Models -->
+        <div class="nav-item" id="nav-anime" onclick="showPage('anime-models', this)">
+          <span class="icon">🎌</span> Anime 3D Models
         </div>
 
         <div class="nav-item" onclick="doLogout()">
@@ -335,6 +411,150 @@
           </div>
         </div>
       </div>
+
+      <!-- ══════════ ANIME 3D MODELS ══════════ -->
+      <div class="page" id="page-anime-models">
+        <div class="page-header">
+          <h2>🎌 Free Anime Girl 3D Models</h2>
+          <p>Curated list of the best free anime girl 3D models on Sketchfab — iconic characters, base meshes &amp; collections</p>
+        </div>
+
+        <!-- TIP BOX -->
+        <div class="anime-tip-box">
+          💡 <strong>Tip:</strong> On Sketchfab, always filter by <strong>"Downloadable"</strong> + <strong>"Free"</strong> on the left sidebar to avoid paid models. Always check the <strong>license tab</strong> on each model before using commercially.
+        </div>
+
+        <!-- SECTION 1: Famous Characters -->
+        <div class="anime-section-label">🎌 Famous Character Models — Free Download</div>
+        <div class="anime-grid">
+
+          <!-- ★ FEATURED FIRST: TSUNADE -->
+          <div class="anime-card featured">
+            <div class="anime-card-num featured">★ Featured</div>
+            <div class="anime-card-title">Tsunade – Bikini</div>
+            <div class="anime-card-author">Naruto Series · Fan Art</div>
+            <div class="anime-card-desc">A detailed 3D fan-art model of Tsunade from Naruto in a bikini outfit. Highly detailed sculpt showcasing the legendary Sannin with premium finishing — a standout addition to any anime collection.</div>
+            <div class="anime-card-tags">
+              <span class="tag tag-free">Free</span>
+              <span class="tag tag-naruto">Naruto</span>
+              <span class="tag tag-rigged">Fan Art</span>
+            </div>
+            <a class="anime-card-link" href="https://sketchfab.com/3d-models/tsunade-bikini-504e54403a674387a4c6bda8782e7248" target="_blank" rel="noopener">⬡ View on Sketchfab</a>
+          </div>
+
+          <div class="anime-card">
+            <div class="anime-card-num">Model 01</div>
+            <div class="anime-card-title">Rem – Re:Zero</div>
+            <div class="anime-card-author">by DarienToad</div>
+            <div class="anime-card-desc">A Blender-made Rem model — modeled, textured, and rigged with a stylized look. Described as game-ready and animation-ready with clean topology.</div>
+            <div class="anime-card-tags">
+              <span class="tag tag-free">Free</span>
+              <span class="tag tag-blender">Blender</span>
+              <span class="tag tag-rigged">Rigged</span>
+            </div>
+            <a class="anime-card-link" href="https://sketchfab.com/3d-models/rem-rezero-0b1cf5f" target="_blank" rel="noopener">⬡ View on Sketchfab</a>
+          </div>
+
+          <div class="anime-card">
+            <div class="anime-card-num">Model 02</div>
+            <div class="anime-card-title">Nezuko Kamado – Demon Slayer</div>
+            <div class="anime-card-author">by shandrew</div>
+            <div class="anime-card-desc">A free Nezuko model that allows commercial use and modifications. Recommended with VRM shaders for better aesthetics — use a toon shader in Unity for best results.</div>
+            <div class="anime-card-tags">
+              <span class="tag tag-free">Free</span>
+              <span class="tag tag-unity">Unity</span>
+              <span class="tag tag-rigged">Commercial OK</span>
+            </div>
+            <a class="anime-card-link" href="https://sketchfab.com/3d-models/nezuko-kamado-a3c7bc1" target="_blank" rel="noopener">⬡ View on Sketchfab</a>
+          </div>
+
+          <div class="anime-card">
+            <div class="anime-card-num">Model 03</div>
+            <div class="anime-card-title">Nezuko Kamado – Fan Art Sculpt</div>
+            <div class="anime-card-author">by kileice</div>
+            <div class="anime-card-desc">A fan-art Nezuko sculpt with a detailed modeling process video on YouTube — great for artists who want to study and learn the creation workflow.</div>
+            <div class="anime-card-tags">
+              <span class="tag tag-free">Free</span>
+              <span class="tag tag-blender">Sculpt</span>
+            </div>
+            <a class="anime-card-link" href="https://sketchfab.com/3d-models/nezuko-kamado-demon-slayer-d30ffab" target="_blank" rel="noopener">⬡ View on Sketchfab</a>
+          </div>
+
+          <div class="anime-card">
+            <div class="anime-card-num">Model 04</div>
+            <div class="anime-card-title">Free Test Character Asuna</div>
+            <div class="anime-card-author">by MSGDI</div>
+            <div class="anime-card-desc">A low-poly, game-ready sci-fi style Asuna character designed for animation retargeting. Comes with FBX files and pre-built animations included in the download.</div>
+            <div class="anime-card-tags">
+              <span class="tag tag-free">Free</span>
+              <span class="tag tag-lowpoly">Low Poly</span>
+              <span class="tag tag-rigged">FBX + Anims</span>
+            </div>
+            <a class="anime-card-link" href="https://sketchfab.com/3d-models/free-test-character-asuna-cc63f3c" target="_blank" rel="noopener">⬡ View on Sketchfab</a>
+          </div>
+
+        </div>
+
+        <!-- SECTION 2: Base/Utility Models -->
+        <div class="anime-section-label">🛠️ Base / Utility Models — Free &amp; Highly Useful</div>
+        <div class="anime-grid">
+
+          <div class="anime-card">
+            <div class="anime-card-num">Model 05</div>
+            <div class="anime-card-title">Genshin-Style Anime Female Base Mesh</div>
+            <div class="anime-card-author">by David Onizaki</div>
+            <div class="anime-card-desc">A Blender-ready base mesh with shape keys to easily modify arms, legs, bust, hips, neck, shoulders, and face. Includes an anime-based shader for authentic stylized rendering.</div>
+            <div class="anime-card-tags">
+              <span class="tag tag-free">Free</span>
+              <span class="tag tag-blender">Blender</span>
+              <span class="tag tag-base">Base Mesh</span>
+              <span class="tag tag-rigged">Shape Keys</span>
+            </div>
+            <a class="anime-card-link" href="https://sketchfab.com/3d-models/genshin-style-anime-female-base-mesh" target="_blank" rel="noopener">⬡ View on Sketchfab</a>
+          </div>
+
+          <div class="anime-card">
+            <div class="anime-card-num">Model 06</div>
+            <div class="anime-card-title">Anime Female Character Blank (IK Rig + Shape Keys)</div>
+            <div class="anime-card-author">by Atokia</div>
+            <div class="anime-card-desc">A mid-poly base model with a clean mesh, face shape keys for many animations, and blanks inside the head for blush and expression effects. Suitable for most classic anime character designs.</div>
+            <div class="anime-card-tags">
+              <span class="tag tag-free">Free</span>
+              <span class="tag tag-rigged">IK Rig</span>
+              <span class="tag tag-base">Base Mesh</span>
+              <span class="tag tag-rigged">Shape Keys</span>
+            </div>
+            <a class="anime-card-link" href="https://sketchfab.com/3d-models/anime-female-character-blank" target="_blank" rel="noopener">⬡ View on Sketchfab</a>
+          </div>
+
+        </div>
+
+        <!-- SECTION 3: Collections -->
+        <div class="anime-section-label">📦 Collections to Browse</div>
+        <div class="anime-collection-grid">
+
+          <div class="anime-collection-card">
+            <div class="col-title">DomineSama's Free 2D-Style Anime Collection</div>
+            <div class="col-desc">A massive curated collection of free downloadable anime characters in 2D-influenced 3D style. One of the largest free anime model libraries on Sketchfab.</div>
+            <a href="https://sketchfab.com/DomineSama/collections" target="_blank" rel="noopener">⬡ Browse Collection →</a>
+          </div>
+
+          <div class="anime-collection-card">
+            <div class="col-title">Sketchfab #anime-3d Tag</div>
+            <div class="col-desc">Browse all free anime 3D models sorted by likes across the entire Sketchfab platform. Filter by "Free" and "Downloadable" for best results.</div>
+            <a href="https://sketchfab.com/tags/anime-3d" target="_blank" rel="noopener">⬡ Browse Tag →</a>
+          </div>
+
+          <div class="anime-collection-card">
+            <div class="col-title">Character-Specific Tags</div>
+            <div class="col-desc">Search #nezuko · #rem · #mikasa · #asuna · #zero-two-anime directly on Sketchfab and filter by "Free" for character-targeted results.</div>
+            <a href="https://sketchfab.com/tags/nezuko" target="_blank" rel="noopener">⬡ Search Tags →</a>
+          </div>
+
+        </div>
+
+      </div>
+      <!-- ══════════ END ANIME 3D MODELS ══════════ -->
 
     </div><!-- /content -->
   </div><!-- /main-layout -->
