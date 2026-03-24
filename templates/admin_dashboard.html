@@ -9,16 +9,16 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:      #0d0f14;
-      --card:    #13161e;
-      --border:  #1f2330;
-      --accent:  #6c63ff;
-      --accent2: #ff6584;
-      --text:    #e8eaf0;
-      --muted:   #6b7280;
-      --success: #34d399;
-      --error:   #f87171;
-      --warn:    #fbbf24;
+      --bg:       #0d0f14;
+      --card:     #13161e;
+      --border:   #1f2330;
+      --accent:   #6c63ff;
+      --accent2:  #ff6584;
+      --text:     #e8eaf0;
+      --muted:    #6b7280;
+      --success:  #34d399;
+      --error:    #f87171;
+      --warn:     #fbbf24;
     }
 
     body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; }
@@ -37,85 +37,120 @@
     .btn-logout:hover { border-color: var(--error); color: var(--error); }
 
     /* ── LAYOUT ── */
-    .main { max-width: 1200px; margin: 0 auto; padding: 36px 24px; }
-    .page-title { font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 800; margin-bottom: 6px; }
-    .page-subtitle { color: var(--muted); font-size: 14px; margin-bottom: 32px; }
+    .main { max-width: 1100px; margin: 0 auto; padding: 36px 24px; }
+    .page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 32px; flex-wrap: wrap; gap: 16px; }
+    .page-title { font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 800; margin-bottom: 4px; }
+    .page-subtitle { color: var(--muted); font-size: 14px; }
+
+    /* ── PRIMARY BUTTON ── */
+    .btn-primary {
+      background: var(--accent); color: #fff; border: none; border-radius: 10px;
+      padding: 11px 22px; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700;
+      cursor: pointer; transition: opacity 0.2s, transform 0.15s; white-space: nowrap;
+    }
+    .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+    .btn-primary:active { transform: translateY(0); }
 
     /* ── STATS ── */
-    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
-    .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 22px 24px; }
-    .stat-label { font-size: 12px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
-    .stat-value { font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 800; }
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 28px; }
+    .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px 22px; }
+    .stat-label { font-size: 11px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+    .stat-value { font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 800; }
     .stat-value.accent  { color: var(--accent); }
     .stat-value.success { color: var(--success); }
     .stat-value.warn    { color: var(--warn); }
     .stat-value.pink    { color: var(--accent2); }
 
-    /* ── GRID ── */
-    .grid-2 { display: grid; grid-template-columns: 320px 1fr; gap: 20px; }
-
-    /* ── CARD ── */
-    .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 28px; }
-    .card-title { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; margin-bottom: 20px; }
-
-    /* ── FORM ── */
-    .form-group { margin-bottom: 14px; }
-    .form-group label { display: block; font-size: 11px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
-    .form-group input,
-    .form-group select {
-      width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
-      padding: 11px 14px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px; outline: none; transition: border-color 0.2s;
-    }
-    .form-group input:focus,
-    .form-group select:focus { border-color: var(--accent); }
-    .form-group input::placeholder { color: var(--muted); }
-    .form-group select option { background: var(--card); }
-
-    .btn-primary { width: 100%; background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: 12px; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: opacity 0.2s; margin-top: 4px; }
-    .btn-primary:hover { opacity: 0.85; }
-
-    .msg-box { margin-top: 12px; padding: 10px 14px; border-radius: 8px; font-size: 13px; display: none; }
-    .msg-box.error   { background: rgba(248,113,113,0.1); color: var(--error);   border: 1px solid rgba(248,113,113,0.2); display: block; }
-    .msg-box.success { background: rgba(52,211,153,0.1);  color: var(--success); border: 1px solid rgba(52,211,153,0.2);  display: block; }
-
-    /* ── TABLE ── */
+    /* ── TABLE CARD ── */
+    .table-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+    .table-header { padding: 22px 24px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); }
+    .table-title { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; }
     .table-wrapper { overflow-x: auto; }
+
     table { width: 100%; border-collapse: collapse; }
-    thead th { font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); }
+    thead th { font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); padding: 12px 20px; text-align: left; border-bottom: 1px solid var(--border); }
     tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
     tbody tr:last-child { border-bottom: none; }
-    tbody tr:hover { background: rgba(255,255,255,0.02); }
-    tbody td { padding: 12px 14px; font-size: 14px; vertical-align: middle; }
+    tbody tr:hover { background: rgba(255,255,255,0.025); }
+    tbody td { padding: 14px 20px; font-size: 14px; vertical-align: middle; }
 
-    .grade-badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 700; }
+    .grade-badge { display: inline-block; padding: 3px 12px; border-radius: 20px; font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 700; }
     .grade-A { background: rgba(52,211,153,0.15);  color: #34d399; }
     .grade-B { background: rgba(96,165,250,0.15);  color: #60a5fa; }
     .grade-C { background: rgba(251,191,36,0.15);  color: #fbbf24; }
     .grade-D { background: rgba(251,146,60,0.15);  color: #fb923c; }
     .grade-F { background: rgba(248,113,113,0.15); color: #f87171; }
 
-    /* ── INLINE EDIT ── */
-    .row-display, .row-edit { display: contents; }
-    .edit-input {
-      background: var(--bg); border: 1px solid var(--accent); border-radius: 6px;
-      padding: 6px 10px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 13px;
-      outline: none; width: 80px;
-    }
-    .action-btn { padding: 5px 12px; border-radius: 6px; font-size: 12px; font-family: 'Syne', sans-serif; font-weight: 600; cursor: pointer; border: none; margin-right: 4px; transition: opacity 0.2s; white-space: nowrap; }
+    .action-btn { padding: 5px 13px; border-radius: 6px; font-size: 12px; font-family: 'Syne', sans-serif; font-weight: 600; cursor: pointer; border: none; margin-right: 4px; transition: opacity 0.2s; }
     .action-btn:hover { opacity: 0.75; }
     .btn-edit   { background: rgba(108,99,255,0.15); color: var(--accent); }
-    .btn-save   { background: rgba(52,211,153,0.15); color: var(--success); }
-    .btn-cancel { background: rgba(107,114,128,0.15); color: var(--muted); }
     .btn-delete { background: rgba(248,113,113,0.12); color: var(--error); }
 
-    .empty-state { text-align: center; padding: 40px 20px; color: var(--muted); font-size: 14px; }
+    .empty-state { text-align: center; padding: 48px 20px; color: var(--muted); font-size: 14px; }
+
+    /* ══════════════════════════════════════════
+       MODAL SYSTEM
+    ══════════════════════════════════════════ */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(6px); display: flex; align-items: center;
+      justify-content: center; z-index: 1000; padding: 24px;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+    .modal {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 20px; padding: 36px; width: 100%; max-width: 460px;
+      position: relative;
+      transform: translateY(20px) scale(0.97);
+      transition: transform 0.25s cubic-bezier(0.16,1,0.3,1), opacity 0.2s;
+      opacity: 0;
+    }
+    .modal-overlay.open .modal { transform: translateY(0) scale(1); opacity: 1; }
+
+    .modal-close {
+      position: absolute; top: 18px; right: 18px;
+      background: var(--border); border: none; color: var(--muted);
+      width: 30px; height: 30px; border-radius: 50%; font-size: 16px;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s, color 0.2s;
+    }
+    .modal-close:hover { background: rgba(248,113,113,0.15); color: var(--error); }
+
+    .modal-title { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; margin-bottom: 6px; }
+    .modal-sub   { font-size: 13px; color: var(--muted); margin-bottom: 28px; }
+
+    /* ── FORM ── */
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 11px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 7px; }
+    .form-group input,
+    .form-group select {
+      width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+      padding: 12px 14px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px; outline: none; transition: border-color 0.2s;
+    }
+    .form-group input:focus,
+    .form-group select:focus { border-color: var(--accent); }
+    .form-group input::placeholder { color: var(--muted); }
+    .form-group select option { background: var(--card); }
+
+    .modal-actions { display: flex; gap: 10px; margin-top: 8px; }
+    .btn-modal-submit { flex: 1; background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: 13px; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: opacity 0.2s; }
+    .btn-modal-submit:hover { opacity: 0.85; }
+    .btn-modal-cancel { background: transparent; border: 1px solid var(--border); color: var(--muted); border-radius: 8px; padding: 13px 20px; font-family: 'DM Sans'; font-size: 14px; cursor: pointer; transition: all 0.2s; }
+    .btn-modal-cancel:hover { border-color: var(--text); color: var(--text); }
+
+    .msg-box { margin-top: 14px; padding: 10px 14px; border-radius: 8px; font-size: 13px; display: none; }
+    .msg-box.error   { background: rgba(248,113,113,0.1); color: var(--error);   border: 1px solid rgba(248,113,113,0.2); display: block; }
+    .msg-box.success { background: rgba(52,211,153,0.1);  color: var(--success); border: 1px solid rgba(52,211,153,0.2);  display: block; }
 
     @media (max-width: 900px) {
       .stats { grid-template-columns: 1fr 1fr; }
-      .grid-2 { grid-template-columns: 1fr; }
     }
-    @media (max-width: 480px) {
+    @media (max-width: 600px) {
       .stats { grid-template-columns: 1fr; }
+      .modal { padding: 28px 22px; }
     }
   </style>
 </head>
@@ -131,72 +166,127 @@
   </nav>
 
   <div class="main">
-    <div class="page-title">Admin Dashboard 🛡️</div>
-    <p class="page-subtitle">Add and manage student marks. Students must register first before you can add their marks.</p>
+
+    <div class="page-header">
+      <div>
+        <div class="page-title">Admin Dashboard 🛡️</div>
+        <p class="page-subtitle">Manage student marks. Students must register before you can add their results.</p>
+      </div>
+      <button class="btn-primary" onclick="openAddModal()">➕ Add Entry</button>
+    </div>
 
     <!-- STATS -->
     <div class="stats">
-      <div class="stat-card"><div class="stat-label">Total Entries</div><div class="stat-value accent" id="statTotal">—</div></div>
-      <div class="stat-card"><div class="stat-label">Students</div><div class="stat-value pink" id="statStudents">—</div></div>
+      <div class="stat-card"><div class="stat-label">Total Entries</div><div class="stat-value accent"  id="statTotal">—</div></div>
+      <div class="stat-card"><div class="stat-label">Students</div>     <div class="stat-value pink"    id="statStudents">—</div></div>
       <div class="stat-card"><div class="stat-label">Class Average</div><div class="stat-value success" id="statAvg">—</div></div>
-      <div class="stat-card"><div class="stat-label">Top Score</div><div class="stat-value warn" id="statTopper">—</div></div>
+      <div class="stat-card"><div class="stat-label">Top Score</div>    <div class="stat-value warn"    id="statTopper">—</div></div>
     </div>
 
-    <div class="grid-2">
+    <!-- TABLE -->
+    <div class="table-card">
+      <div class="table-header">
+        <div class="table-title">📋 All Mark Entries</div>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Student</th>
+              <th>Subject</th>
+              <th>Marks</th>
+              <th>Grade</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="marksTable">
+            <tr><td colspan="6"><div class="empty-state">Loading...</div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-      <!-- ADD MARKS FORM -->
-      <div class="card">
-        <div class="card-title">➕ Add Student Marks</div>
+  </div>
 
-        <div class="form-group">
-          <label>Student (registered accounts)</label>
-          <select id="addStudent">
-            <option value="">Loading students...</option>
-          </select>
-        </div>
+  <!-- ═══════════════════════════════════
+       ADD ENTRY MODAL
+  ═══════════════════════════════════ -->
+  <div class="modal-overlay" id="addOverlay" onclick="closeOnOverlay(event,'addOverlay')">
+    <div class="modal">
+      <button class="modal-close" onclick="closeModal('addOverlay')">✕</button>
+      <div class="modal-title">Add Student Marks</div>
+      <p class="modal-sub">Select a registered student, enter the subject and marks.</p>
 
-        <div class="form-group">
-          <label>Subject</label>
-          <input type="text" id="addSubject" placeholder="e.g. Mathematics"/>
-        </div>
-
-        <div class="form-group">
-          <label>Marks (0–100)</label>
-          <input type="number" id="addMarks" placeholder="e.g. 85" min="0" max="100"/>
-        </div>
-
-        <button class="btn-primary" onclick="addEntry()">Add Entry</button>
-        <div id="addMsg" class="msg-box"></div>
+      <div class="form-group">
+        <label>Student</label>
+        <select id="addStudent">
+          <option value="">Loading students…</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Subject</label>
+        <input type="text" id="addSubject" placeholder="e.g. Mathematics"/>
+      </div>
+      <div class="form-group">
+        <label>Marks (0 – 100)</label>
+        <input type="number" id="addMarks" placeholder="e.g. 85" min="0" max="100"/>
       </div>
 
-      <!-- MARKS TABLE -->
-      <div class="card">
-        <div class="card-title">📋 All Mark Entries</div>
-        <div class="table-wrapper">
-          <table>
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Student</th>
-                <th>Subject</th>
-                <th>Marks</th>
-                <th>Grade</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody id="marksTable">
-              <tr><td colspan="6"><div class="empty-state">Loading...</div></td></tr>
-            </tbody>
-          </table>
-        </div>
+      <div class="modal-actions">
+        <button class="btn-modal-cancel" onclick="closeModal('addOverlay')">Cancel</button>
+        <button class="btn-modal-submit" onclick="submitAdd()">Add Entry</button>
+      </div>
+      <div id="addMsg" class="msg-box"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════
+       EDIT MARKS MODAL
+  ═══════════════════════════════════ -->
+  <div class="modal-overlay" id="editOverlay" onclick="closeOnOverlay(event,'editOverlay')">
+    <div class="modal">
+      <button class="modal-close" onclick="closeModal('editOverlay')">✕</button>
+      <div class="modal-title">Edit Marks</div>
+      <p class="modal-sub">Update the marks for <strong id="editStudentName">—</strong> · <span id="editSubjectName" style="color:var(--muted)">—</span></p>
+
+      <input type="hidden" id="editRowId"/>
+
+      <div class="form-group">
+        <label>New Marks (0 – 100)</label>
+        <input type="number" id="editMarks" placeholder="e.g. 90" min="0" max="100"/>
       </div>
 
+      <div class="modal-actions">
+        <button class="btn-modal-cancel" onclick="closeModal('editOverlay')">Cancel</button>
+        <button class="btn-modal-submit" onclick="submitEdit()">Save Changes</button>
+      </div>
+      <div id="editMsg" class="msg-box"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════
+       DELETE CONFIRM MODAL
+  ═══════════════════════════════════ -->
+  <div class="modal-overlay" id="deleteOverlay" onclick="closeOnOverlay(event,'deleteOverlay')">
+    <div class="modal">
+      <button class="modal-close" onclick="closeModal('deleteOverlay')">✕</button>
+      <div class="modal-title">Delete Entry</div>
+      <p class="modal-sub">Are you sure you want to delete the entry for <strong id="deleteStudentName">—</strong> in <strong id="deleteSubjectName">—</strong>? This cannot be undone.</p>
+
+      <input type="hidden" id="deleteRowId"/>
+
+      <div class="modal-actions">
+        <button class="btn-modal-cancel" onclick="closeModal('deleteOverlay')">Cancel</button>
+        <button class="btn-modal-submit" style="background:var(--error)" onclick="submitDelete()">Delete</button>
+      </div>
     </div>
   </div>
 
   <script>
-    let allStudents = []; // mark entries
+    let allStudents = [];
 
+    // ───── INIT ─────
     window.onload = async () => {
       const res  = await fetch('/api/me');
       const data = await res.json();
@@ -204,89 +294,85 @@
       await loadStudentAccounts();
       await loadEntries();
       await loadStats();
+
+      // close modals on Escape
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') {
+          ['addOverlay','editOverlay','deleteOverlay'].forEach(closeModal);
+        }
+      });
     };
 
-    // ── Load registered student accounts into dropdown
+    // ───── MODAL HELPERS ─────
+    function openModal(id)  { document.getElementById(id).classList.add('open'); document.body.style.overflow = 'hidden'; }
+    function closeModal(id) { document.getElementById(id).classList.remove('open'); document.body.style.overflow = ''; }
+    function closeOnOverlay(e, id) { if (e.target === e.currentTarget) closeModal(id); }
+
+    // ───── LOAD DATA ─────
     async function loadStudentAccounts() {
       const res  = await fetch('/api/student_accounts');
       const data = await res.json();
       const sel  = document.getElementById('addStudent');
-
       if (!data.ok || !data.students.length) {
         sel.innerHTML = '<option value="">No registered students yet</option>';
         return;
       }
-
       sel.innerHTML = '<option value="">— Select student —</option>' +
         data.students.map(s =>
           `<option value="${s.id}">${s.name || s.email} (${s.email})</option>`
         ).join('');
     }
 
-    // ── Load all mark entries
     async function loadEntries() {
       const res  = await fetch('/api/students');
       const data = await res.json();
-      const tbody = document.getElementById('marksTable');
       allStudents = data.students || [];
+      const tbody = document.getElementById('marksTable');
 
       if (!allStudents.length) {
-        tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state">No entries yet. Add one! 👆</div></td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state">No entries yet. Click <strong>+ Add Entry</strong> to get started.</div></td></tr>`;
         return;
       }
 
-      tbody.innerHTML = allStudents.map((s, i) => buildRow(s, i)).join('');
-    }
-
-    function buildRow(s, i) {
-      return `
-        <tr id="row-${s.id}" data-id="${s.id}" data-marks="${s.marks}">
+      tbody.innerHTML = allStudents.map((s, i) => `
+        <tr>
           <td style="color:var(--muted)">${i + 1}</td>
-          <td><strong>${s.name}</strong><br><span style="font-size:11px;color:var(--muted)">${s.email}</span></td>
-          <td>${s.subject}</td>
-          <td class="cell-marks">${s.marks}</td>
-          <td class="cell-grade"><span class="grade-badge grade-${s.grade}">${s.grade}</span></td>
-          <td class="cell-actions">
-            <button class="action-btn btn-edit"   onclick="startEdit('${s.id}')">Edit</button>
-            <button class="action-btn btn-delete" onclick="deleteEntry('${s.id}')">Delete</button>
+          <td>
+            <strong>${s.name}</strong>
+            <br><span style="font-size:11px;color:var(--muted)">${s.email}</span>
           </td>
-        </tr>`;
+          <td>${s.subject}</td>
+          <td><strong>${s.marks}</strong></td>
+          <td><span class="grade-badge grade-${s.grade}">${s.grade}</span></td>
+          <td>
+            <button class="action-btn btn-edit"   onclick="openEditModal('${s.id}','${escHtml(s.name)}','${escHtml(s.subject)}',${s.marks})">Edit</button>
+            <button class="action-btn btn-delete" onclick="openDeleteModal('${s.id}','${escHtml(s.name)}','${escHtml(s.subject)}')">Delete</button>
+          </td>
+        </tr>`).join('');
     }
 
-    // ── Inline edit
-    function startEdit(id) {
-      const row    = document.getElementById(`row-${id}`);
-      const marks  = row.dataset.marks;
-      row.querySelector('.cell-marks').innerHTML =
-        `<input class="edit-input" id="edit-${id}" type="number" value="${marks}" min="0" max="100"/>`;
-      row.querySelector('.cell-grade').innerHTML = `<span style="color:var(--muted);font-size:12px">recalculating…</span>`;
-      row.querySelector('.cell-actions').innerHTML = `
-        <button class="action-btn btn-save"   onclick="saveEdit('${id}')">Save</button>
-        <button class="action-btn btn-cancel" onclick="loadEntries()">Cancel</button>`;
+    async function loadStats() {
+      const [avgRes, topRes] = await Promise.all([fetch('/api/average'), fetch('/api/find_topper')]);
+      const avg = await avgRes.json();
+      const top = await topRes.json();
+      const unique = new Set(allStudents.map(s => s.user_id)).size;
+      document.getElementById('statTotal').textContent    = allStudents.length;
+      document.getElementById('statStudents').textContent = unique;
+      document.getElementById('statAvg').textContent      = avg.ok ? avg.average : '—';
+      document.getElementById('statTopper').textContent   = top.ok ? `${top.name} · ${top.marks}` : '—';
     }
 
-    async function saveEdit(id) {
-      const input = document.getElementById(`edit-${id}`);
-      const marks = input.value;
-
-      const res  = await fetch('/api/update_marks', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id, marks })
-      });
-      const data = await res.json();
-
-      if (data.ok) {
-        await loadEntries();
-        await loadStats();
-      } else {
-        alert(data.error);
-        await loadEntries();
-      }
+    // ───── ADD MODAL ─────
+    function openAddModal() {
+      document.getElementById('addMsg').className = 'msg-box';
+      document.getElementById('addSubject').value = '';
+      document.getElementById('addMarks').value   = '';
+      document.getElementById('addStudent').value = '';
+      openModal('addOverlay');
+      setTimeout(() => document.getElementById('addSubject').focus(), 250);
     }
 
-    // ── Add entry
-    async function addEntry() {
+    async function submitAdd() {
       const user_id = document.getElementById('addStudent').value;
       const subject = document.getElementById('addSubject').value.trim();
       const marks   = document.getElementById('addMarks').value;
@@ -294,18 +380,13 @@
       msg.className = 'msg-box';
 
       const res  = await fetch('/api/add_student', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ user_id, subject, marks })
       });
       const data = await res.json();
 
       if (data.ok) {
-        msg.className   = 'msg-box success';
-        msg.textContent = data.message;
-        document.getElementById('addSubject').value = '';
-        document.getElementById('addMarks').value   = '';
-        document.getElementById('addStudent').value = '';
+        closeModal('addOverlay');
         await loadEntries();
         await loadStats();
       } else {
@@ -314,34 +395,64 @@
       }
     }
 
-    // ── Delete
-    async function deleteEntry(id) {
-      if (!confirm('Delete this entry?')) return;
-      const res  = await fetch('/api/delete_student', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+    // ───── EDIT MODAL ─────
+    function openEditModal(id, name, subject, marks) {
+      document.getElementById('editRowId').value               = id;
+      document.getElementById('editStudentName').textContent   = name;
+      document.getElementById('editSubjectName').textContent   = subject;
+      document.getElementById('editMarks').value               = marks;
+      document.getElementById('editMsg').className             = 'msg-box';
+      openModal('editOverlay');
+      setTimeout(() => document.getElementById('editMarks').focus(), 250);
+    }
+
+    async function submitEdit() {
+      const id    = document.getElementById('editRowId').value;
+      const marks = document.getElementById('editMarks').value;
+      const msg   = document.getElementById('editMsg');
+      msg.className = 'msg-box';
+
+      const res  = await fetch('/api/update_marks', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, marks })
+      });
+      const data = await res.json();
+
+      if (data.ok) {
+        closeModal('editOverlay');
+        await loadEntries();
+        await loadStats();
+      } else {
+        msg.className   = 'msg-box error';
+        msg.textContent = data.error;
+      }
+    }
+
+    // ───── DELETE MODAL ─────
+    function openDeleteModal(id, name, subject) {
+      document.getElementById('deleteRowId').value              = id;
+      document.getElementById('deleteStudentName').textContent  = name;
+      document.getElementById('deleteSubjectName').textContent  = subject;
+      openModal('deleteOverlay');
+    }
+
+    async function submitDelete() {
+      const id  = document.getElementById('deleteRowId').value;
+      const res = await fetch('/api/delete_student', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id })
       });
       const data = await res.json();
-      if (data.ok) { await loadEntries(); await loadStats(); }
-      else alert(data.error);
+      if (data.ok) {
+        closeModal('deleteOverlay');
+        await loadEntries();
+        await loadStats();
+      } else {
+        alert(data.error);
+      }
     }
 
-    // ── Stats
-    async function loadStats() {
-      const [avgRes, topRes] = await Promise.all([
-        fetch('/api/average'),
-        fetch('/api/find_topper')
-      ]);
-      const avg = await avgRes.json();
-      const top = await topRes.json();
-
-      const uniqueStudents = new Set(allStudents.map(s => s.user_id)).size;
-      document.getElementById('statTotal').textContent    = allStudents.length;
-      document.getElementById('statStudents').textContent = uniqueStudents;
-      document.getElementById('statAvg').textContent      = avg.ok ? avg.average : '—';
-      document.getElementById('statTopper').textContent   = top.ok ? `${top.name} · ${top.marks}` : '—';
-    }
+    function escHtml(s) { return s.replace(/'/g, "\\'"); }
 
     async function logout() {
       await fetch('/api/logout', { method: 'POST' });
