@@ -1,52 +1,58 @@
-# 📊 Marks Management System
+# Marks Management System 🚀 (My First Project)
 
-A full-stack web application for managing student marks, built with **Flask** and **Supabase**, deployable to **Vercel**.
+This is my first project where I tried to build a simple Marks Management System and deploy it online.
+
+🔗 **Live Demo :**  https://marks-management-pearl.vercel.app/
+
+---
+
+## About This Project
+
+I created this project as part of my learning journey.
+
+* I wrote basic backend logic using Python
+* I used AI tools to build the frontend UI
+* I connected the frontend with the backend
+* I used Supabase for database and backend services
+* Finally, I deployed the project on Vercel
+
+This project helped me understand how real-world applications work.
 
 ---
 
 ## ✨ Features
 
-### Admin
-- Add / delete students with automatic grade calculation
-- Update marks for existing students
-- View all students and their grades
-- Find the class topper
-- Calculate class average
-
-### Student
-- Login securely and view personal marks & grade
-
-### Auth
-- Email/password authentication via Supabase Auth
-- Role-based access control (`admin` / `student`)
-- Session-based protection on all routes
+* Add student details
+* Enter and manage marks
+* Store data using Supabase
+* Display data in a simple format
+* Clean and user-friendly interface
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Backend | Python / Flask |
-| Database & Auth | Supabase (PostgreSQL + Auth) |
-| Frontend | HTML, CSS, Vanilla JS |
-| Hosting | Vercel (serverless) |
+* Frontend: HTML, CSS, JavaScript (with help of AI tools)
+* Backend: Python (basic logic written by me)
+* Database & Backend Service: Supabase
+* Deployment: Vercel
 
 ---
 
-## ⚡ Grade Scale
+## What I Learned...
 
-| Marks | Grade |
-|---|---|
-| 90 – 100 | A |
-| 75 – 89 | B |
-| 50 – 74 | C |
-| 35 – 49 | D |
-| 0 – 34 | F |
+From this project, I learned :
+
+* Basics of Python backend development
+* How to connect frontend with backend
+* How to use Supabase for database management
+* How to use AI tools for development
+* How to deploy a project on Vercel
+* Understanding of full-stack project workflow
 
 ---
 
-## 🗂️ Project Structure
+## Project Structure
 
 ```
 my project/
@@ -66,108 +72,27 @@ my project/
 
 ---
 
-## 🚀 Local Setup
+## 🚧 Future Improvements
 
-### 1. Clone the repo
+* Add multiple marks per student
+* Add analytics (average marks, ranking, etc.)
+* Export data (PDF/Excel)
 
-```bash
-git clone https://github.com/kunjvachharajani/Marks-management-.git
-cd Marks-management-
+---
+
+## ▶️ How to Run Locally (Optional)
+
 ```
-
-### 2. Create a virtual environment & install dependencies
-
-```bash
-python -m venv venv
-venv\Scripts\activate        # Windows
-# source venv/bin/activate   # macOS/Linux
-
+git clone <your-repo-link>
+cd your-project
 pip install -r requirements.txt
-```
-
-### 3. Create a `.env` file
-
-```env
-SUPABASE_URL=your_supabase_project_url
-SUPABASE_KEY=your_supabase_anon_key
-FLASK_SECRET_KEY=any_long_random_secret
-```
-
-### 4. Set up Supabase tables
-
-Run the following SQL in your Supabase SQL editor:
-
-```sql
--- Profiles table (stores role per user)
-create table profiles (
-  id uuid primary key references auth.users(id),
-  email text not null,
-  role text not null check (role in ('admin', 'student'))
-);
-
--- Students table (stores marks)
-create table students (
-  id uuid primary key default gen_random_uuid(),
-  name text not null,
-  marks integer not null,
-  grade text not null,
-  user_id uuid references auth.users(id)
-);
-```
-
-### 5. Run the app
-
-```bash
 python app.py
 ```
 
-Open [http://127.0.0.1:5000](http://127.0.0.1:5000) in your browser.
+---
 
 ---
 
-## 🌐 Deploy to Vercel
+## 💬 Feedback
 
-### 1. Push your code to GitHub (already done)
-
-### 2. Import the repo on Vercel
-
-Go to [vercel.com](https://vercel.com) → **Add New Project** → select this repo.
-
-### 3. Add Environment Variables
-
-In **Vercel Dashboard → Project → Settings → Environment Variables**, add:
-
-| Key | Value |
-|---|---|
-| `SUPABASE_URL` | your Supabase project URL |
-| `SUPABASE_KEY` | your Supabase anon key |
-| `FLASK_SECRET_KEY` | a long random secret string |
-
-### 4. Deploy
-
-Click **Deploy** — Vercel will build and host the app automatically.
-
----
-
-## 📡 API Reference
-
-| Method | Endpoint | Auth | Description |
-|---|---|---|---|
-| POST | `/api/register` | — | Register new user |
-| POST | `/api/login` | — | Login |
-| POST | `/api/logout` | ✅ | Logout |
-| GET | `/api/me` | ✅ | Get current user info |
-| GET | `/api/students` | ✅ | List all students |
-| POST | `/api/add_student` | Admin | Add a student |
-| POST | `/api/delete_student` | Admin | Delete a student |
-| POST | `/api/update_marks` | Admin | Update student marks |
-| GET | `/api/find_topper` | Admin | Get class topper |
-| GET | `/api/average` | Admin | Get class average |
-| POST | `/api/check_grade` | ✅ | Check grade for a name |
-| GET | `/api/my_marks` | Student | Get own marks |
-
----
-
-## 📄 License
-
-MIT
+If you check this project and have suggestions, feel free to share 🙂
