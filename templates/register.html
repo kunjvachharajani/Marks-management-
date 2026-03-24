@@ -192,6 +192,9 @@
     <h1>Create account ✨</h1>
     <p class="subtitle">Fill in your details to get started</p>
 
+    <label for="fullname">Full Name</label>
+    <input type="text" id="fullname" placeholder="e.g. Rahul Shah"/>
+
     <label for="email">Email Address</label>
     <input type="email" id="email" placeholder="you@gmail.com"/>
 
@@ -231,6 +234,7 @@
     }
 
     async function handleRegister() {
+      const name     = document.getElementById('fullname').value.trim();
       const email    = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
       const msg      = document.getElementById('msg');
@@ -238,7 +242,7 @@
       msg.className = 'msg';
       msg.textContent = '';
 
-      if (!email || !password) {
+      if (!name || !email || !password) {
         msg.className = 'msg error';
         msg.textContent = 'Please fill in all fields.';
         return;
@@ -257,7 +261,7 @@
       const res  = await fetch('/api/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, role: selectedRole })
+        body: JSON.stringify({ name, email, password, role: selectedRole })
       });
       const data = await res.json();
 

@@ -6,9 +6,18 @@ import os
 app = Flask(__name__, template_folder=os.path.join(os.path.dirname(__file__), 'templates'))
 app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'marks_mgmt_secret_key_2024')
 
+
 # ══════════════════════════════════════════════════════
 #  HELPERS
 # ══════════════════════════════════════════════════════
+
+def calc_grade(marks):
+    if   marks >= 90: return 'A'
+    elif marks >= 75: return 'B'
+    elif marks >= 50: return 'C'
+    elif marks >= 35: return 'D'
+    else:             return 'F'
+
 
 def login_required(f):
     @functools.wraps(f)
@@ -17,6 +26,7 @@ def login_required(f):
             return jsonify({"ok": False, "error": "Not logged in"}), 401
         return f(*args, **kwargs)
     return decorated
+
 
 def admin_required(f):
     @functools.wraps(f)
@@ -67,30 +77,30 @@ def register():
     data     = request.get_json()
     email    = data.get('email', '').strip()
     password = data.get('password', '')
-    role     = data.get('role', 'student')   # 'admin' or 'student'
+    role     = data.get('role', 'student')
+    name     = data.get('name', '').strip()
 
-    # basic validation
     if not email.endswith('@gmail.com'):
         return jsonify({"ok": False, "error": "Email must end with @gmail.com"})
     if len(password) < 6:
         return jsonify({"ok": False, "error": "Password must be at least 6 characters"})
     if role not in ('admin', 'student'):
         return jsonify({"ok": False, "error": "Invalid role"})
+    if not name:
+        return jsonify({"ok": False, "error": "Full name is required"})
 
     try:
-        # 1. create user in Supabase Auth
         auth_response = supabase.auth.sign_up({
             "email": email,
             "password": password
         })
-
         user_id = auth_response.user.id
 
-        # 2. save role in profiles table
         supabase.table('profiles').insert({
             "id":    user_id,
             "email": email,
-            "role":  role
+            "role":  role,
+            "name":  name
         }).execute()
 
         return jsonify({"ok": True, "message": "Account created successfully"})
@@ -106,26 +116,23 @@ def login():
     password = data.get('password', '')
 
     try:
-        # 1. sign in with Supabase Auth
         auth_response = supabase.auth.sign_in_with_password({
             "email": email,
             "password": password
         })
-
         user_id = auth_response.user.id
 
-        # 2. get role from profiles table
-        profile = supabase.table('profiles').select('role').eq('id', user_id).single().execute()
+        profile = supabase.table('profiles').select('role, name').eq('id', user_id).single().execute()
         role    = profile.data['role']
+        name    = profile.data.get('name', email.split('@')[0])
 
-        # 3. save to Flask session
-        session['logged_in']    = True
-        session['email']        = email
-        session['role']         = role
-        session['user_id']      = user_id
+        session['logged_in']      = True
+        session['email']          = email
+        session['role']           = role
+        session['user_id']        = user_id
+        session['name']           = name
         session['supabase_token'] = auth_response.session.access_token
 
-        # 4. redirect based on role
         redirect_url = '/admin/dashboard' if role == 'admin' else '/student/dashboard'
         return jsonify({"ok": True, "redirect": redirect_url})
 
@@ -144,36 +151,79 @@ def logout():
 def me():
     return jsonify({
         "email": session.get('email'),
+        "name":  session.get('name'),
         "role":  session.get('role')
     })
 
 
 # ══════════════════════════════════════════════════════
-#  STUDENT OPERATIONS  (admin only except check_grade)
+#  ADMIN — STUDENT ACCOUNTS
+# ══════════════════════════════════════════════════════
+
+@app.route('/api/student_accounts')
+@admin_required
+def student_accounts():
+    """Return all registered student user accounts so admin can pick who to add marks for."""
+    try:
+        result   = supabase.table('profiles').select('id, name, email').eq('role', 'student').execute()
+        return jsonify({"ok": True, "students": result.data})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)})
+
+
+# ══════════════════════════════════════════════════════
+#  ADMIN — MARKS OPERATIONS
 # ══════════════════════════════════════════════════════
 
 @app.route('/api/students')
-@login_required
+@admin_required
 def get_students():
+    """Return all mark entries — full rows including subject, grade, and student name from profiles."""
     try:
-        result   = supabase.table('students').select('*').execute()
-        students = {}
+        result = supabase.table('students') \
+            .select('id, user_id, marks, grade, subject') \
+            .order('marks', desc=True) \
+            .execute()
+
+        if not result.data:
+            return jsonify({"ok": True, "students": []})
+
+        # Get names from profiles
+        user_ids = list({row['user_id'] for row in result.data})
+        profiles = supabase.table('profiles').select('id, name, email').in_('id', user_ids).execute()
+        profile_map = {p['id']: p for p in profiles.data}
+
+        enriched = []
         for row in result.data:
-            students[row['name']] = row['marks']
-        return jsonify({"students": students})
+            profile = profile_map.get(row['user_id'], {})
+            enriched.append({
+                "id":      row['id'],
+                "user_id": row['user_id'],
+                "name":    profile.get('name', profile.get('email', 'Unknown')),
+                "email":   profile.get('email', ''),
+                "subject": row['subject'],
+                "marks":   row['marks'],
+                "grade":   row['grade'],
+            })
+
+        return jsonify({"ok": True, "students": enriched})
     except Exception as e:
-        return jsonify({"students": {}, "error": str(e)})
+        return jsonify({"ok": False, "error": str(e)})
 
 
 @app.route('/api/add_student', methods=['POST'])
 @admin_required
 def add_student():
-    data  = request.get_json()
-    name  = data.get('name', '').strip()
-    marks = data.get('marks')
+    """Add a mark entry for a registered student account."""
+    data     = request.get_json()
+    user_id  = data.get('user_id', '').strip()
+    subject  = data.get('subject', 'General').strip()
+    marks    = data.get('marks')
 
-    if not name:
-        return jsonify({"ok": False, "error": "Name is required"})
+    if not user_id:
+        return jsonify({"ok": False, "error": "Student is required"})
+    if not subject:
+        return jsonify({"ok": False, "error": "Subject is required"})
     try:
         marks = int(marks)
         if not (0 <= marks <= 100):
@@ -181,21 +231,53 @@ def add_student():
     except (TypeError, ValueError):
         return jsonify({"ok": False, "error": "Invalid marks value"})
 
-    # calculate grade
-    if   marks >= 90: grade = 'A'
-    elif marks >= 75: grade = 'B'
-    elif marks >= 50: grade = 'C'
-    elif marks >= 35: grade = 'D'
-    else:             grade = 'F'
+    grade = calc_grade(marks)
 
     try:
+        # Check we're not duplicating the same subject for the same student
+        existing = supabase.table('students') \
+            .select('id') \
+            .eq('user_id', user_id) \
+            .eq('subject', subject) \
+            .execute()
+        if existing.data:
+            return jsonify({"ok": False, "error": f"Marks for '{subject}' already exist for this student. Use Edit to update."})
+
         supabase.table('students').insert({
-            "name":    name,
+            "user_id": user_id,
             "marks":   marks,
             "grade":   grade,
-            "user_id": session.get('user_id')
+            "subject": subject,
         }).execute()
-        return jsonify({"ok": True, "message": f"Student '{name}' added successfully"})
+        return jsonify({"ok": True, "message": f"Marks added successfully"})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)})
+
+
+@app.route('/api/update_marks', methods=['POST'])
+@admin_required
+def update_marks():
+    """Update marks for a specific row by its row id."""
+    data  = request.get_json()
+    row_id = data.get('id')
+    marks  = data.get('marks')
+
+    try:
+        marks = int(marks)
+        if not (0 <= marks <= 100):
+            return jsonify({"ok": False, "error": "Marks must be between 0 and 100"})
+    except (TypeError, ValueError):
+        return jsonify({"ok": False, "error": "Invalid marks value"})
+
+    grade = calc_grade(marks)
+
+    try:
+        result = supabase.table('students').select('id').eq('id', row_id).execute()
+        if not result.data:
+            return jsonify({"ok": False, "error": "Record not found"})
+
+        supabase.table('students').update({"marks": marks, "grade": grade}).eq('id', row_id).execute()
+        return jsonify({"ok": True, "message": "Marks updated", "grade": grade})
     except Exception as e:
         return jsonify({"ok": False, "error": str(e)})
 
@@ -203,16 +285,17 @@ def add_student():
 @app.route('/api/delete_student', methods=['POST'])
 @admin_required
 def delete_student():
-    data = request.get_json()
-    name = data.get('name', '').strip()
+    """Delete a mark entry by row id."""
+    data   = request.get_json()
+    row_id = data.get('id')
 
     try:
-        result = supabase.table('students').select('id').eq('name', name).execute()
+        result = supabase.table('students').select('id').eq('id', row_id).execute()
         if not result.data:
-            return jsonify({"ok": False, "error": f"Student '{name}' not found"})
+            return jsonify({"ok": False, "error": "Record not found"})
 
-        supabase.table('students').delete().eq('name', name).execute()
-        return jsonify({"ok": True, "message": f"Student '{name}' deleted successfully"})
+        supabase.table('students').delete().eq('id', row_id).execute()
+        return jsonify({"ok": True, "message": "Record deleted"})
     except Exception as e:
         return jsonify({"ok": False, "error": str(e)})
 
@@ -221,63 +304,13 @@ def delete_student():
 @admin_required
 def find_topper():
     try:
-        result = supabase.table('students').select('name, marks').order('marks', desc=True).limit(1).execute()
+        result = supabase.table('students').select('user_id, marks, subject').order('marks', desc=True).limit(1).execute()
         if not result.data:
-            return jsonify({"ok": False, "error": "No students available"})
-        topper = result.data[0]
-        return jsonify({"ok": True, "name": topper['name'], "marks": topper['marks']})
-    except Exception as e:
-        return jsonify({"ok": False, "error": str(e)})
-
-
-# ══════════════════════════════════════════════════════
-#  MARKS OPERATIONS
-# ══════════════════════════════════════════════════════
-
-@app.route('/api/update_marks', methods=['POST'])
-@admin_required
-def update_marks():
-    data  = request.get_json()
-    name  = data.get('name', '').strip()
-    marks = data.get('marks')
-
-    try:
-        marks = int(marks)
-        if not (0 <= marks <= 100):
-            return jsonify({"ok": False, "error": "Marks must be between 0 and 100"})
-    except (TypeError, ValueError):
-        return jsonify({"ok": False, "error": "Invalid marks value"})
-
-    if   marks >= 90: grade = 'A'
-    elif marks >= 75: grade = 'B'
-    elif marks >= 50: grade = 'C'
-    elif marks >= 35: grade = 'D'
-    else:             grade = 'F'
-
-    try:
-        result = supabase.table('students').select('id').eq('name', name).execute()
-        if not result.data:
-            return jsonify({"ok": False, "error": f"Student '{name}' not found"})
-
-        supabase.table('students').update({"marks": marks, "grade": grade}).eq('name', name).execute()
-        return jsonify({"ok": True, "message": f"Marks updated for '{name}'"})
-    except Exception as e:
-        return jsonify({"ok": False, "error": str(e)})
-
-
-@app.route('/api/check_grade', methods=['POST'])
-@login_required
-def check_grade():
-    data = request.get_json()
-    name = data.get('name', '').strip()
-
-    try:
-        result = supabase.table('students').select('name, marks, grade').eq('name', name).execute()
-        if not result.data:
-            return jsonify({"ok": False, "error": f"Student '{name}' not found"})
-
-        student = result.data[0]
-        return jsonify({"ok": True, "name": student['name'], "marks": student['marks'], "grade": student['grade']})
+            return jsonify({"ok": False, "error": "No records yet"})
+        row = result.data[0]
+        profile = supabase.table('profiles').select('name, email').eq('id', row['user_id']).single().execute()
+        name = profile.data.get('name', profile.data.get('email', 'Unknown'))
+        return jsonify({"ok": True, "name": name, "marks": row['marks'], "subject": row['subject']})
     except Exception as e:
         return jsonify({"ok": False, "error": str(e)})
 
@@ -288,29 +321,32 @@ def calculate_average():
     try:
         result = supabase.table('students').select('marks').execute()
         if not result.data:
-            return jsonify({"ok": False, "error": "No students available"})
-
+            return jsonify({"ok": False, "error": "No records yet"})
         total   = sum(row['marks'] for row in result.data)
-        average = round(total / len(result.data), 2)
+        average = round(total / len(result.data), 1)
         return jsonify({"ok": True, "average": average})
     except Exception as e:
         return jsonify({"ok": False, "error": str(e)})
 
 
+# ══════════════════════════════════════════════════════
+#  STUDENT — VIEW OWN MARKS
+# ══════════════════════════════════════════════════════
+
 @app.route('/api/my_marks')
 @login_required
 def my_marks():
-    """Student sees only their own marks — matched by email name"""
-    email = session.get('email', '')
-    name  = email.split('@')[0]   # e.g. rahul@gmail.com → rahul
+    """Student sees all their own mark entries, matched by user_id from session."""
+    user_id = session.get('user_id')
 
     try:
-        result = supabase.table('students').select('name, marks, grade').ilike('name', name).execute()
-        if not result.data:
-            return jsonify({"ok": False, "error": "Your marks not found yet"})
+        result = supabase.table('students') \
+            .select('subject, marks, grade') \
+            .eq('user_id', user_id) \
+            .order('subject') \
+            .execute()
 
-        student = result.data[0]
-        return jsonify({"ok": True, "name": student['name'], "marks": student['marks'], "grade": student['grade']})
+        return jsonify({"ok": True, "marks": result.data})
     except Exception as e:
         return jsonify({"ok": False, "error": str(e)})
 

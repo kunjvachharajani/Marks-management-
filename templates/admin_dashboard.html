@@ -21,216 +21,101 @@
       --warn:    #fbbf24;
     }
 
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      min-height: 100vh;
-    }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; }
 
     /* ── NAVBAR ── */
     nav {
-      background: var(--card);
-      border-bottom: 1px solid var(--border);
-      padding: 0 32px;
-      height: 64px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      background: var(--card); border-bottom: 1px solid var(--border);
+      padding: 0 32px; height: 64px; display: flex; align-items: center;
+      justify-content: space-between; position: sticky; top: 0; z-index: 100;
     }
-    .nav-logo {
-      font-family: 'Syne', sans-serif;
-      font-weight: 800;
-      font-size: 16px;
-      letter-spacing: 1px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .nav-logo span {
-      background: var(--accent);
-      color: #fff;
-      font-size: 11px;
-      padding: 2px 8px;
-      border-radius: 20px;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-    }
+    .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 16px; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
+    .nav-logo span { background: var(--accent); color: #fff; font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 700; letter-spacing: 1.5px; }
     .nav-right { display: flex; align-items: center; gap: 16px; }
     .nav-email { font-size: 13px; color: var(--muted); }
-    .btn-logout {
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 7px 16px;
-      border-radius: 8px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 13px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
+    .btn-logout { background: transparent; border: 1px solid var(--border); color: var(--text); padding: 7px 16px; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; transition: all 0.2s; }
     .btn-logout:hover { border-color: var(--error); color: var(--error); }
 
-    /* ── MAIN LAYOUT ── */
-    .main { max-width: 1100px; margin: 0 auto; padding: 36px 24px; }
-
-    .page-title {
-      font-family: 'Syne', sans-serif;
-      font-size: 26px;
-      font-weight: 800;
-      margin-bottom: 6px;
-    }
+    /* ── LAYOUT ── */
+    .main { max-width: 1200px; margin: 0 auto; padding: 36px 24px; }
+    .page-title { font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 800; margin-bottom: 6px; }
     .page-subtitle { color: var(--muted); font-size: 14px; margin-bottom: 32px; }
 
-    /* ── STATS ROW ── */
-    .stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 32px; }
-    .stat-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 22px 24px;
-    }
+    /* ── STATS ── */
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+    .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 22px 24px; }
     .stat-label { font-size: 12px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
-    .stat-value { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; }
+    .stat-value { font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 800; }
     .stat-value.accent  { color: var(--accent); }
     .stat-value.success { color: var(--success); }
     .stat-value.warn    { color: var(--warn); }
+    .stat-value.pink    { color: var(--accent2); }
 
-    /* ── TWO COLUMN ── */
-    .grid-2 { display: grid; grid-template-columns: 1fr 1.6fr; gap: 20px; margin-bottom: 24px; }
+    /* ── GRID ── */
+    .grid-2 { display: grid; grid-template-columns: 320px 1fr; gap: 20px; }
 
     /* ── CARD ── */
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 28px;
-    }
-    .card-title {
-      font-family: 'Syne', sans-serif;
-      font-size: 15px;
-      font-weight: 700;
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 28px; }
+    .card-title { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; margin-bottom: 20px; }
 
     /* ── FORM ── */
     .form-group { margin-bottom: 14px; }
-    .form-group label {
-      display: block;
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 6px;
+    .form-group label { display: block; font-size: 11px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+    .form-group input,
+    .form-group select {
+      width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+      padding: 11px 14px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px; outline: none; transition: border-color 0.2s;
     }
-    .form-group input {
-      width: 100%;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 11px 14px;
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 14px;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-    .form-group input:focus { border-color: var(--accent); }
+    .form-group input:focus,
+    .form-group select:focus { border-color: var(--accent); }
     .form-group input::placeholder { color: var(--muted); }
+    .form-group select option { background: var(--card); }
 
-    .btn-primary {
-      width: 100%;
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      padding: 12px;
-      font-family: 'Syne', sans-serif;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: opacity 0.2s;
-      margin-top: 4px;
-    }
+    .btn-primary { width: 100%; background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: 12px; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; transition: opacity 0.2s; margin-top: 4px; }
     .btn-primary:hover { opacity: 0.85; }
 
-    .msg-box {
-      margin-top: 12px;
-      padding: 10px 14px;
-      border-radius: 8px;
-      font-size: 13px;
-      display: none;
-    }
+    .msg-box { margin-top: 12px; padding: 10px 14px; border-radius: 8px; font-size: 13px; display: none; }
     .msg-box.error   { background: rgba(248,113,113,0.1); color: var(--error);   border: 1px solid rgba(248,113,113,0.2); display: block; }
     .msg-box.success { background: rgba(52,211,153,0.1);  color: var(--success); border: 1px solid rgba(52,211,153,0.2);  display: block; }
 
     /* ── TABLE ── */
     .table-wrapper { overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; }
-    thead th {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--muted);
-      padding: 10px 14px;
-      text-align: left;
-      border-bottom: 1px solid var(--border);
-    }
-    tbody tr {
-      border-bottom: 1px solid var(--border);
-      transition: background 0.15s;
-    }
+    thead th { font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); }
+    tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
     tbody tr:last-child { border-bottom: none; }
-    tbody tr:hover { background: rgba(255,255,255,0.025); }
-    tbody td { padding: 13px 14px; font-size: 14px; }
+    tbody tr:hover { background: rgba(255,255,255,0.02); }
+    tbody td { padding: 12px 14px; font-size: 14px; vertical-align: middle; }
 
-    .grade-badge {
-      display: inline-block;
-      padding: 3px 10px;
-      border-radius: 20px;
-      font-family: 'Syne', sans-serif;
-      font-size: 12px;
-      font-weight: 700;
-    }
+    .grade-badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 700; }
     .grade-A { background: rgba(52,211,153,0.15);  color: #34d399; }
     .grade-B { background: rgba(96,165,250,0.15);  color: #60a5fa; }
     .grade-C { background: rgba(251,191,36,0.15);  color: #fbbf24; }
     .grade-D { background: rgba(251,146,60,0.15);  color: #fb923c; }
     .grade-F { background: rgba(248,113,113,0.15); color: #f87171; }
 
-    .action-btn {
-      padding: 5px 12px;
-      border-radius: 6px;
-      font-size: 12px;
-      font-family: 'Syne', sans-serif;
-      font-weight: 600;
-      cursor: pointer;
-      border: none;
-      margin-right: 4px;
-      transition: opacity 0.2s;
+    /* ── INLINE EDIT ── */
+    .row-display, .row-edit { display: contents; }
+    .edit-input {
+      background: var(--bg); border: 1px solid var(--accent); border-radius: 6px;
+      padding: 6px 10px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 13px;
+      outline: none; width: 80px;
     }
+    .action-btn { padding: 5px 12px; border-radius: 6px; font-size: 12px; font-family: 'Syne', sans-serif; font-weight: 600; cursor: pointer; border: none; margin-right: 4px; transition: opacity 0.2s; white-space: nowrap; }
     .action-btn:hover { opacity: 0.75; }
     .btn-edit   { background: rgba(108,99,255,0.15); color: var(--accent); }
+    .btn-save   { background: rgba(52,211,153,0.15); color: var(--success); }
+    .btn-cancel { background: rgba(107,114,128,0.15); color: var(--muted); }
     .btn-delete { background: rgba(248,113,113,0.12); color: var(--error); }
 
-    .empty-state {
-      text-align: center;
-      padding: 40px 20px;
-      color: var(--muted);
-      font-size: 14px;
-    }
+    .empty-state { text-align: center; padding: 40px 20px; color: var(--muted); font-size: 14px; }
 
-    @media (max-width: 768px) {
-      .stats { grid-template-columns: 1fr; }
+    @media (max-width: 900px) {
+      .stats { grid-template-columns: 1fr 1fr; }
       .grid-2 { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 480px) {
+      .stats { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -238,10 +123,7 @@
 
   <!-- NAVBAR -->
   <nav>
-    <div class="nav-logo">
-      Marks Management
-      <span>ADMIN</span>
-    </div>
+    <div class="nav-logo">Marks Management <span>ADMIN</span></div>
     <div class="nav-right">
       <span class="nav-email" id="adminEmail">—</span>
       <button class="btn-logout" onclick="logout()">Sign Out</button>
@@ -250,75 +132,60 @@
 
   <div class="main">
     <div class="page-title">Admin Dashboard 🛡️</div>
-    <p class="page-subtitle">Manage all students, marks, and grades from here.</p>
+    <p class="page-subtitle">Add and manage student marks. Students must register first before you can add their marks.</p>
 
     <!-- STATS -->
     <div class="stats">
-      <div class="stat-card">
-        <div class="stat-label">Total Students</div>
-        <div class="stat-value accent" id="statTotal">—</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Class Average</div>
-        <div class="stat-value success" id="statAvg">—</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Topper</div>
-        <div class="stat-value warn" id="statTopper">—</div>
-      </div>
+      <div class="stat-card"><div class="stat-label">Total Entries</div><div class="stat-value accent" id="statTotal">—</div></div>
+      <div class="stat-card"><div class="stat-label">Students</div><div class="stat-value pink" id="statStudents">—</div></div>
+      <div class="stat-card"><div class="stat-label">Class Average</div><div class="stat-value success" id="statAvg">—</div></div>
+      <div class="stat-card"><div class="stat-label">Top Score</div><div class="stat-value warn" id="statTopper">—</div></div>
     </div>
 
-    <!-- ADD STUDENT + TABLE -->
     <div class="grid-2">
 
-      <!-- ADD STUDENT FORM -->
-      <div>
-        <div class="card" style="margin-bottom:16px">
-          <div class="card-title">➕ Add Student</div>
-          <div class="form-group">
-            <label>Student Name</label>
-            <input type="text" id="addName" placeholder="e.g. Rahul Shah"/>
-          </div>
-          <div class="form-group">
-            <label>Marks (0–100)</label>
-            <input type="number" id="addMarks" placeholder="e.g. 85" min="0" max="100"/>
-          </div>
-          <button class="btn-primary" onclick="addStudent()">Add Student</button>
-          <div id="addMsg" class="msg-box"></div>
+      <!-- ADD MARKS FORM -->
+      <div class="card">
+        <div class="card-title">➕ Add Student Marks</div>
+
+        <div class="form-group">
+          <label>Student (registered accounts)</label>
+          <select id="addStudent">
+            <option value="">Loading students...</option>
+          </select>
         </div>
 
-        <!-- UPDATE MARKS -->
-        <div class="card">
-          <div class="card-title">✏️ Update Marks</div>
-          <div class="form-group">
-            <label>Student Name</label>
-            <input type="text" id="updateName" placeholder="Exact name"/>
-          </div>
-          <div class="form-group">
-            <label>New Marks (0–100)</label>
-            <input type="number" id="updateMarks" placeholder="e.g. 90" min="0" max="100"/>
-          </div>
-          <button class="btn-primary" onclick="updateMarks()">Update Marks</button>
-          <div id="updateMsg" class="msg-box"></div>
+        <div class="form-group">
+          <label>Subject</label>
+          <input type="text" id="addSubject" placeholder="e.g. Mathematics"/>
         </div>
+
+        <div class="form-group">
+          <label>Marks (0–100)</label>
+          <input type="number" id="addMarks" placeholder="e.g. 85" min="0" max="100"/>
+        </div>
+
+        <button class="btn-primary" onclick="addEntry()">Add Entry</button>
+        <div id="addMsg" class="msg-box"></div>
       </div>
 
-      <!-- STUDENTS TABLE -->
+      <!-- MARKS TABLE -->
       <div class="card">
-        <div class="card-title">👨‍🎓 All Students</div>
+        <div class="card-title">📋 All Mark Entries</div>
         <div class="table-wrapper">
           <table>
             <thead>
               <tr>
                 <th>#</th>
-                <th>Name</th>
+                <th>Student</th>
+                <th>Subject</th>
                 <th>Marks</th>
                 <th>Grade</th>
                 <th>Actions</th>
               </tr>
             </thead>
-            <tbody id="studentTable">
-              <tr><td colspan="5"><div class="empty-state">Loading students...</div></td></tr>
+            <tbody id="marksTable">
+              <tr><td colspan="6"><div class="empty-state">Loading...</div></td></tr>
             </tbody>
           </table>
         </div>
@@ -328,131 +195,152 @@
   </div>
 
   <script>
-    // ── Load page data ──
+    let allStudents = []; // mark entries
+
     window.onload = async () => {
       const res  = await fetch('/api/me');
       const data = await res.json();
       if (data.email) document.getElementById('adminEmail').textContent = data.email;
-      loadStudents();
-      loadStats();
+      await loadStudentAccounts();
+      await loadEntries();
+      await loadStats();
     };
 
-    async function loadStudents() {
-      const res  = await fetch('/api/students');
+    // ── Load registered student accounts into dropdown
+    async function loadStudentAccounts() {
+      const res  = await fetch('/api/student_accounts');
       const data = await res.json();
-      const tbody = document.getElementById('studentTable');
+      const sel  = document.getElementById('addStudent');
 
-      if (!data.students || Object.keys(data.students).length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state">No students yet. Add one! 👆</div></td></tr>`;
+      if (!data.ok || !data.students.length) {
+        sel.innerHTML = '<option value="">No registered students yet</option>';
         return;
       }
 
-      let html = '';
-      let i = 1;
-      for (const [name, marks] of Object.entries(data.students)) {
-        const grade = getGrade(marks);
-        html += `
-          <tr>
-            <td style="color:var(--muted)">${i++}</td>
-            <td><strong>${name}</strong></td>
-            <td>${marks}</td>
-            <td><span class="grade-badge grade-${grade}">${grade}</span></td>
-            <td>
-              <button class="action-btn btn-edit"   onclick="prefillUpdate('${name}', ${marks})">Edit</button>
-              <button class="action-btn btn-delete" onclick="deleteStudent('${name}')">Delete</button>
-            </td>
-          </tr>`;
+      sel.innerHTML = '<option value="">— Select student —</option>' +
+        data.students.map(s =>
+          `<option value="${s.id}">${s.name || s.email} (${s.email})</option>`
+        ).join('');
+    }
+
+    // ── Load all mark entries
+    async function loadEntries() {
+      const res  = await fetch('/api/students');
+      const data = await res.json();
+      const tbody = document.getElementById('marksTable');
+      allStudents = data.students || [];
+
+      if (!allStudents.length) {
+        tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state">No entries yet. Add one! 👆</div></td></tr>`;
+        return;
       }
-      tbody.innerHTML = html;
+
+      tbody.innerHTML = allStudents.map((s, i) => buildRow(s, i)).join('');
     }
 
-    async function loadStats() {
-      const [avgRes, topRes, stuRes] = await Promise.all([
-        fetch('/api/average'),
-        fetch('/api/find_topper'),
-        fetch('/api/students')
-      ]);
-      const avg = await avgRes.json();
-      const top = await topRes.json();
-      const stu = await stuRes.json();
-
-      document.getElementById('statTotal').textContent  = stu.students ? Object.keys(stu.students).length : 0;
-      document.getElementById('statAvg').textContent    = avg.ok ? avg.average : '—';
-      document.getElementById('statTopper').textContent = top.ok ? `${top.name} (${top.marks})` : '—';
+    function buildRow(s, i) {
+      return `
+        <tr id="row-${s.id}" data-id="${s.id}" data-marks="${s.marks}">
+          <td style="color:var(--muted)">${i + 1}</td>
+          <td><strong>${s.name}</strong><br><span style="font-size:11px;color:var(--muted)">${s.email}</span></td>
+          <td>${s.subject}</td>
+          <td class="cell-marks">${s.marks}</td>
+          <td class="cell-grade"><span class="grade-badge grade-${s.grade}">${s.grade}</span></td>
+          <td class="cell-actions">
+            <button class="action-btn btn-edit"   onclick="startEdit('${s.id}')">Edit</button>
+            <button class="action-btn btn-delete" onclick="deleteEntry('${s.id}')">Delete</button>
+          </td>
+        </tr>`;
     }
 
-    function getGrade(marks) {
-      if (marks >= 90) return 'A';
-      if (marks >= 75) return 'B';
-      if (marks >= 50) return 'C';
-      if (marks >= 35) return 'D';
-      return 'F';
+    // ── Inline edit
+    function startEdit(id) {
+      const row    = document.getElementById(`row-${id}`);
+      const marks  = row.dataset.marks;
+      row.querySelector('.cell-marks').innerHTML =
+        `<input class="edit-input" id="edit-${id}" type="number" value="${marks}" min="0" max="100"/>`;
+      row.querySelector('.cell-grade').innerHTML = `<span style="color:var(--muted);font-size:12px">recalculating…</span>`;
+      row.querySelector('.cell-actions').innerHTML = `
+        <button class="action-btn btn-save"   onclick="saveEdit('${id}')">Save</button>
+        <button class="action-btn btn-cancel" onclick="loadEntries()">Cancel</button>`;
     }
 
-    function prefillUpdate(name, marks) {
-      document.getElementById('updateName').value  = name;
-      document.getElementById('updateMarks').value = marks;
-      document.getElementById('updateName').scrollIntoView({ behavior: 'smooth' });
+    async function saveEdit(id) {
+      const input = document.getElementById(`edit-${id}`);
+      const marks = input.value;
+
+      const res  = await fetch('/api/update_marks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, marks })
+      });
+      const data = await res.json();
+
+      if (data.ok) {
+        await loadEntries();
+        await loadStats();
+      } else {
+        alert(data.error);
+        await loadEntries();
+      }
     }
 
-    async function addStudent() {
-      const name  = document.getElementById('addName').value.trim();
-      const marks = document.getElementById('addMarks').value;
-      const msg   = document.getElementById('addMsg');
+    // ── Add entry
+    async function addEntry() {
+      const user_id = document.getElementById('addStudent').value;
+      const subject = document.getElementById('addSubject').value.trim();
+      const marks   = document.getElementById('addMarks').value;
+      const msg     = document.getElementById('addMsg');
       msg.className = 'msg-box';
 
       const res  = await fetch('/api/add_student', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, marks })
+        body: JSON.stringify({ user_id, subject, marks })
       });
       const data = await res.json();
 
       if (data.ok) {
-        msg.className = 'msg-box success';
+        msg.className   = 'msg-box success';
         msg.textContent = data.message;
-        document.getElementById('addName').value  = '';
-        document.getElementById('addMarks').value = '';
-        loadStudents(); loadStats();
+        document.getElementById('addSubject').value = '';
+        document.getElementById('addMarks').value   = '';
+        document.getElementById('addStudent').value = '';
+        await loadEntries();
+        await loadStats();
       } else {
-        msg.className = 'msg-box error';
+        msg.className   = 'msg-box error';
         msg.textContent = data.error;
       }
     }
 
-    async function updateMarks() {
-      const name  = document.getElementById('updateName').value.trim();
-      const marks = document.getElementById('updateMarks').value;
-      const msg   = document.getElementById('updateMsg');
-      msg.className = 'msg-box';
-
-      const res  = await fetch('/api/update_marks', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, marks })
-      });
-      const data = await res.json();
-
-      if (data.ok) {
-        msg.className = 'msg-box success';
-        msg.textContent = data.message;
-        loadStudents(); loadStats();
-      } else {
-        msg.className = 'msg-box error';
-        msg.textContent = data.error;
-      }
-    }
-
-    async function deleteStudent(name) {
-      if (!confirm(`Delete student "${name}"?`)) return;
+    // ── Delete
+    async function deleteEntry(id) {
+      if (!confirm('Delete this entry?')) return;
       const res  = await fetch('/api/delete_student', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name })
+        body: JSON.stringify({ id })
       });
       const data = await res.json();
-      if (data.ok) { loadStudents(); loadStats(); }
+      if (data.ok) { await loadEntries(); await loadStats(); }
       else alert(data.error);
+    }
+
+    // ── Stats
+    async function loadStats() {
+      const [avgRes, topRes] = await Promise.all([
+        fetch('/api/average'),
+        fetch('/api/find_topper')
+      ]);
+      const avg = await avgRes.json();
+      const top = await topRes.json();
+
+      const uniqueStudents = new Set(allStudents.map(s => s.user_id)).size;
+      document.getElementById('statTotal').textContent    = allStudents.length;
+      document.getElementById('statStudents').textContent = uniqueStudents;
+      document.getElementById('statAvg').textContent      = avg.ok ? avg.average : '—';
+      document.getElementById('statTopper').textContent   = top.ok ? `${top.name} · ${top.marks}` : '—';
     }
 
     async function logout() {
