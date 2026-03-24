@@ -174,29 +174,38 @@
     color: var(--accent); margin: 28px 0 16px; padding-bottom: 8px;
     border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px;
   }
-  .anime-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 18px; margin-bottom: 28px;
+  .anime-tip-box {
+    background: rgba(201,168,76,.07); border: 1px solid rgba(201,168,76,.25);
+    border-radius: 4px; padding: 16px 20px; margin-top: 8px; margin-bottom: 28px;
+    font-size: 13px; color: #aaa; line-height: 1.7;
   }
-  .anime-card {
-    background: var(--surface2); border: 1px solid var(--border); border-radius: 4px;
-    padding: 22px 22px 18px; transition: border-color .2s, transform .2s;
-    display: flex; flex-direction: column; gap: 10px;
+  .anime-tip-box strong { color: var(--accent); }
+
+  /* ── MODEL VIEWER CARD ── */
+  .model-viewer-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 6px;
+    margin-bottom: 32px; overflow: hidden; transition: border-color .2s;
   }
-  .anime-card:hover { border-color: var(--accent); transform: translateY(-2px); }
-  .anime-card-num {
-    font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent);
-    background: rgba(201,168,76,.1); border: 1px solid rgba(201,168,76,.25);
+  .model-viewer-card:hover { border-color: rgba(201,168,76,.4); }
+  .model-viewer-card.featured { border-color: rgba(201,168,76,.45); background: #141410; }
+
+  .model-viewer-header {
+    padding: 18px 24px 14px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  }
+  .model-viewer-header-left { display: flex; flex-direction: column; gap: 6px; }
+  .model-badge {
+    font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--accent); background: rgba(201,168,76,.1); border: 1px solid rgba(201,168,76,.3);
     display: inline-block; padding: 3px 9px; border-radius: 2px; width: fit-content;
   }
-  .anime-card-num.featured {
-    color: #e8c97a; background: rgba(201,168,76,.18); border-color: rgba(201,168,76,.5);
+  .model-badge.featured-badge {
+    color: #e8c97a; background: rgba(201,168,76,.2); border-color: rgba(201,168,76,.6);
   }
-  .anime-card.featured { border-color: rgba(201,168,76,.35); background: #1a1a14; }
-  .anime-card-title { font-size: 15px; color: var(--text); font-style: italic; line-height: 1.4; }
-  .anime-card-author { font-size: 12px; color: var(--muted); }
-  .anime-card-desc { font-size: 13px; color: #aaa; line-height: 1.6; flex: 1; }
-  .anime-card-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .model-title { font-size: 18px; color: var(--text); font-style: italic; }
+  .model-author { font-size: 12px; color: var(--muted); }
+  .model-desc { font-size: 13px; color: #aaa; line-height: 1.6; max-width: 640px; margin-top: 4px; }
+  .model-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
   .tag {
     font-size: 10px; letter-spacing: 1px; text-transform: uppercase;
     padding: 3px 8px; border-radius: 2px; border: 1px solid var(--border); color: var(--muted);
@@ -208,19 +217,40 @@
   .tag-lowpoly{ border-color: rgba(155,89,182,.4); color: #9b59b6; background: rgba(155,89,182,.08); }
   .tag-base   { border-color: rgba(127,140,141,.4); color: #95a5a6; background: rgba(127,140,141,.08); }
   .tag-naruto { border-color: rgba(255,165,0,.4); color: #ffa500; background: rgba(255,165,0,.08); }
-  .anime-card-link {
-    display: inline-flex; align-items: center; gap: 6px;
+  .model-link {
+    display: inline-flex; align-items: center; gap: 6px; align-self: flex-start;
     font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
-    color: var(--accent); text-decoration: none; margin-top: 4px;
-    transition: color .2s;
+    color: var(--accent); text-decoration: none; white-space: nowrap;
+    border: 1px solid rgba(201,168,76,.3); padding: 8px 14px; border-radius: 3px;
+    transition: all .2s; margin-top: 6px;
   }
-  .anime-card-link:hover { color: var(--accent2); }
-  .anime-tip-box {
-    background: rgba(201,168,76,.07); border: 1px solid rgba(201,168,76,.25);
-    border-radius: 4px; padding: 16px 20px; margin-top: 8px; margin-bottom: 28px;
-    font-size: 13px; color: #aaa; line-height: 1.7;
+  .model-link:hover { background: rgba(201,168,76,.1); color: var(--accent2); border-color: var(--accent); }
+
+  /* ── SKETCHFAB EMBED ── */
+  .sketchfab-embed {
+    position: relative; width: 100%; padding-bottom: 50%; background: #0a0a0a;
   }
-  .anime-tip-box strong { color: var(--accent); }
+  .sketchfab-embed iframe {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    border: none; display: block;
+  }
+  .embed-placeholder {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 12px; cursor: pointer; background: #0a0a0a;
+    transition: background .2s;
+  }
+  .embed-placeholder:hover { background: #111; }
+  .embed-placeholder .play-icon {
+    width: 64px; height: 64px; border-radius: 50%;
+    background: rgba(201,168,76,.15); border: 2px solid rgba(201,168,76,.4);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; color: var(--accent); transition: all .2s;
+  }
+  .embed-placeholder:hover .play-icon { background: rgba(201,168,76,.25); border-color: var(--accent); }
+  .embed-placeholder .play-label { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+
+  /* ── COLLECTION CARDS ── */
   .anime-collection-grid {
     display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: 14px; margin-bottom: 28px;
@@ -232,7 +262,7 @@
   }
   .anime-collection-card:hover { border-color: var(--accent); }
   .anime-collection-card .col-title { font-size: 14px; color: var(--text); font-style: italic; }
-  .anime-collection-card .col-desc  { font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .anime-collection-card .col-desc  { font-size: 12px; color: var(--muted); line-height: 1.5; flex: 1; }
   .anime-collection-card a {
     font-size: 11px; letter-spacing: 1px; text-transform: uppercase;
     color: var(--accent); text-decoration: none;
@@ -281,14 +311,13 @@
     <!-- SIDEBAR -->
     <aside>
       <div class="nav-section">
-        <div class="nav-item active" id="nav-dashboard" onclick="showPage('dashboard', this)">
+        <div class="nav-item" id="nav-dashboard" onclick="showPage('dashboard', this)">
           <span class="icon">◈</span> Dashboard
         </div>
       </div>
       <div class="nav-section">
         <div class="nav-section-label">Operations</div>
 
-        <!-- Student Operations -->
         <div class="nav-item" id="nav-students-parent" onclick="toggleSubmenu('students-sub', 'nav-students-parent')">
           <span class="icon">👤</span> Student Operations
           <span class="nav-arrow" id="arrow-students">▶</span>
@@ -301,7 +330,6 @@
           <div class="nav-subitem" onclick="showPage('dashboard', document.getElementById('nav-dashboard'))" style="color:#555;font-size:11px;">↩ Back to Menu</div>
         </div>
 
-        <!-- Marks Operations -->
         <div class="nav-item" id="nav-marks-parent" onclick="toggleSubmenu('marks-sub', 'nav-marks-parent')">
           <span class="icon">📝</span> Marks Operations
           <span class="nav-arrow" id="arrow-marks">▶</span>
@@ -313,8 +341,7 @@
           <div class="nav-subitem" onclick="showPage('dashboard', document.getElementById('nav-dashboard'))" style="color:#555;font-size:11px;">↩ Back to Menu</div>
         </div>
 
-        <!-- Anime Models -->
-        <div class="nav-item" id="nav-anime" onclick="showPage('anime-models', this)">
+        <div class="nav-item active" id="nav-anime" onclick="showPage('anime-models', this)">
           <span class="icon">🎌</span> Anime 3D Models
         </div>
 
@@ -328,7 +355,7 @@
     <div class="content">
 
       <!-- DASHBOARD -->
-      <div class="page active" id="page-dashboard">
+      <div class="page" id="page-dashboard">
         <div class="page-header"><h2>Dashboard</h2><p>Welcome to Marks Management System</p></div>
         <div class="stats-grid" id="stats-grid"></div>
         <div class="card"><h3>All Students</h3><div id="dashboard-table-wrap"></div></div>
@@ -413,144 +440,211 @@
       </div>
 
       <!-- ══════════ ANIME 3D MODELS ══════════ -->
-      <div class="page" id="page-anime-models">
+      <div class="page active" id="page-anime-models">
         <div class="page-header">
           <h2>🎌 Free Anime Girl 3D Models</h2>
-          <p>Curated list of the best free anime girl 3D models on Sketchfab — iconic characters, base meshes &amp; collections</p>
+          <p>Interactive 3D viewers — click any model to spin, zoom &amp; explore it live</p>
         </div>
 
-        <!-- TIP BOX -->
         <div class="anime-tip-box">
-          💡 <strong>Tip:</strong> On Sketchfab, always filter by <strong>"Downloadable"</strong> + <strong>"Free"</strong> on the left sidebar to avoid paid models. Always check the <strong>license tab</strong> on each model before using commercially.
+          💡 <strong>Tip:</strong> Click <strong>"▶ Load 3D Viewer"</strong> on any model to interact with it. Filter by <strong>"Downloadable" + "Free"</strong> on Sketchfab before downloading. Always check the <strong>license tab</strong> before commercial use.
         </div>
 
-        <!-- SECTION 1: Famous Characters -->
+        <!-- ══ 1. TSUNADE — FEATURED FIRST ══ -->
+        <div class="anime-section-label">★ Featured Model</div>
+
+        <div class="model-viewer-card featured">
+          <div class="model-viewer-header">
+            <div class="model-viewer-header-left">
+              <span class="model-badge featured-badge">★ Featured · Naruto</span>
+              <div class="model-title">Tsunade – Bikini</div>
+              <div class="model-author">Naruto Series · Fan Art Sculpt</div>
+              <div class="model-desc">A highly detailed 3D fan-art model of Tsunade from Naruto in a bikini outfit — showcasing the legendary Sannin with premium sculpting and finishing. A standout piece for any anime 3D collection.</div>
+              <div class="model-tags">
+                <span class="tag tag-free">Free</span>
+                <span class="tag tag-naruto">Naruto</span>
+                <span class="tag tag-rigged">Fan Art</span>
+              </div>
+            </div>
+            <a class="model-link" href="https://sketchfab.com/3d-models/tsunade-bikini-504e54403a674387a4c6bda8782e7248" target="_blank" rel="noopener">⬡ Open on Sketchfab</a>
+          </div>
+          <div class="sketchfab-embed" id="embed-tsunade">
+            <div class="embed-placeholder" onclick="loadEmbed('embed-tsunade','504e54403a674387a4c6bda8782e7248')">
+              <div class="play-icon">▶</div>
+              <div class="play-label">Load 3D Viewer</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ SECTION 2: Famous Characters ══ -->
         <div class="anime-section-label">🎌 Famous Character Models — Free Download</div>
-        <div class="anime-grid">
 
-          <!-- ★ FEATURED FIRST: TSUNADE -->
-          <div class="anime-card featured">
-            <div class="anime-card-num featured">★ Featured</div>
-            <div class="anime-card-title">Tsunade – Bikini</div>
-            <div class="anime-card-author">Naruto Series · Fan Art</div>
-            <div class="anime-card-desc">A detailed 3D fan-art model of Tsunade from Naruto in a bikini outfit. Highly detailed sculpt showcasing the legendary Sannin with premium finishing — a standout addition to any anime collection.</div>
-            <div class="anime-card-tags">
-              <span class="tag tag-free">Free</span>
-              <span class="tag tag-naruto">Naruto</span>
-              <span class="tag tag-rigged">Fan Art</span>
+        <!-- Rem -->
+        <div class="model-viewer-card">
+          <div class="model-viewer-header">
+            <div class="model-viewer-header-left">
+              <span class="model-badge">Model 01</span>
+              <div class="model-title">Rem – Re:Zero</div>
+              <div class="model-author">by DarienToad</div>
+              <div class="model-desc">A Blender-made Rem model — modeled, textured, and rigged with a stylized look. Game-ready and animation-ready with clean topology.</div>
+              <div class="model-tags">
+                <span class="tag tag-free">Free</span>
+                <span class="tag tag-blender">Blender</span>
+                <span class="tag tag-rigged">Rigged</span>
+              </div>
             </div>
-            <a class="anime-card-link" href="https://sketchfab.com/3d-models/tsunade-bikini-504e54403a674387a4c6bda8782e7248" target="_blank" rel="noopener">⬡ View on Sketchfab</a>
+            <a class="model-link" href="https://sketchfab.com/3d-models/rem-rezero-0b1cf5f" target="_blank" rel="noopener">⬡ Open on Sketchfab</a>
           </div>
-
-          <div class="anime-card">
-            <div class="anime-card-num">Model 01</div>
-            <div class="anime-card-title">Rem – Re:Zero</div>
-            <div class="anime-card-author">by DarienToad</div>
-            <div class="anime-card-desc">A Blender-made Rem model — modeled, textured, and rigged with a stylized look. Described as game-ready and animation-ready with clean topology.</div>
-            <div class="anime-card-tags">
-              <span class="tag tag-free">Free</span>
-              <span class="tag tag-blender">Blender</span>
-              <span class="tag tag-rigged">Rigged</span>
+          <div class="sketchfab-embed" id="embed-rem">
+            <div class="embed-placeholder" onclick="loadEmbed('embed-rem','0b1cf5f77be5428e9a8c7e3b1a3ce56e')">
+              <div class="play-icon">▶</div>
+              <div class="play-label">Load 3D Viewer</div>
             </div>
-            <a class="anime-card-link" href="https://sketchfab.com/3d-models/rem-rezero-0b1cf5f" target="_blank" rel="noopener">⬡ View on Sketchfab</a>
           </div>
-
-          <div class="anime-card">
-            <div class="anime-card-num">Model 02</div>
-            <div class="anime-card-title">Nezuko Kamado – Demon Slayer</div>
-            <div class="anime-card-author">by shandrew</div>
-            <div class="anime-card-desc">A free Nezuko model that allows commercial use and modifications. Recommended with VRM shaders for better aesthetics — use a toon shader in Unity for best results.</div>
-            <div class="anime-card-tags">
-              <span class="tag tag-free">Free</span>
-              <span class="tag tag-unity">Unity</span>
-              <span class="tag tag-rigged">Commercial OK</span>
-            </div>
-            <a class="anime-card-link" href="https://sketchfab.com/3d-models/nezuko-kamado-a3c7bc1" target="_blank" rel="noopener">⬡ View on Sketchfab</a>
-          </div>
-
-          <div class="anime-card">
-            <div class="anime-card-num">Model 03</div>
-            <div class="anime-card-title">Nezuko Kamado – Fan Art Sculpt</div>
-            <div class="anime-card-author">by kileice</div>
-            <div class="anime-card-desc">A fan-art Nezuko sculpt with a detailed modeling process video on YouTube — great for artists who want to study and learn the creation workflow.</div>
-            <div class="anime-card-tags">
-              <span class="tag tag-free">Free</span>
-              <span class="tag tag-blender">Sculpt</span>
-            </div>
-            <a class="anime-card-link" href="https://sketchfab.com/3d-models/nezuko-kamado-demon-slayer-d30ffab" target="_blank" rel="noopener">⬡ View on Sketchfab</a>
-          </div>
-
-          <div class="anime-card">
-            <div class="anime-card-num">Model 04</div>
-            <div class="anime-card-title">Free Test Character Asuna</div>
-            <div class="anime-card-author">by MSGDI</div>
-            <div class="anime-card-desc">A low-poly, game-ready sci-fi style Asuna character designed for animation retargeting. Comes with FBX files and pre-built animations included in the download.</div>
-            <div class="anime-card-tags">
-              <span class="tag tag-free">Free</span>
-              <span class="tag tag-lowpoly">Low Poly</span>
-              <span class="tag tag-rigged">FBX + Anims</span>
-            </div>
-            <a class="anime-card-link" href="https://sketchfab.com/3d-models/free-test-character-asuna-cc63f3c" target="_blank" rel="noopener">⬡ View on Sketchfab</a>
-          </div>
-
         </div>
 
-        <!-- SECTION 2: Base/Utility Models -->
+        <!-- Nezuko by shandrew -->
+        <div class="model-viewer-card">
+          <div class="model-viewer-header">
+            <div class="model-viewer-header-left">
+              <span class="model-badge">Model 02</span>
+              <div class="model-title">Nezuko Kamado – Demon Slayer</div>
+              <div class="model-author">by shandrew</div>
+              <div class="model-desc">A free Nezuko model that allows commercial use and modifications. Recommended with VRM shaders — use a toon shader in Unity for best results.</div>
+              <div class="model-tags">
+                <span class="tag tag-free">Free</span>
+                <span class="tag tag-unity">Unity</span>
+                <span class="tag tag-rigged">Commercial OK</span>
+              </div>
+            </div>
+            <a class="model-link" href="https://sketchfab.com/3d-models/nezuko-kamado-a3c7bc1" target="_blank" rel="noopener">⬡ Open on Sketchfab</a>
+          </div>
+          <div class="sketchfab-embed" id="embed-nezuko1">
+            <div class="embed-placeholder" onclick="loadEmbed('embed-nezuko1','a3c7bc1f1b4e4a3e9b2c8d7e6f5a4b3c')">
+              <div class="play-icon">▶</div>
+              <div class="play-label">Load 3D Viewer</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Nezuko by kileice -->
+        <div class="model-viewer-card">
+          <div class="model-viewer-header">
+            <div class="model-viewer-header-left">
+              <span class="model-badge">Model 03</span>
+              <div class="model-title">Nezuko Kamado – Fan Art Sculpt</div>
+              <div class="model-author">by kileice</div>
+              <div class="model-desc">A detailed fan-art Nezuko sculpt with a modeling process video on YouTube — great for artists who want to study and learn the creation workflow.</div>
+              <div class="model-tags">
+                <span class="tag tag-free">Free</span>
+                <span class="tag tag-blender">Sculpt</span>
+              </div>
+            </div>
+            <a class="model-link" href="https://sketchfab.com/3d-models/nezuko-kamado-demon-slayer-d30ffab" target="_blank" rel="noopener">⬡ Open on Sketchfab</a>
+          </div>
+          <div class="sketchfab-embed" id="embed-nezuko2">
+            <div class="embed-placeholder" onclick="loadEmbed('embed-nezuko2','d30ffab4c2e34b8a9f1d5c6b7e8a9f0d')">
+              <div class="play-icon">▶</div>
+              <div class="play-label">Load 3D Viewer</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Asuna -->
+        <div class="model-viewer-card">
+          <div class="model-viewer-header">
+            <div class="model-viewer-header-left">
+              <span class="model-badge">Model 04</span>
+              <div class="model-title">Free Test Character Asuna</div>
+              <div class="model-author">by MSGDI</div>
+              <div class="model-desc">A low-poly, game-ready sci-fi style Asuna character for animation retargeting. Comes with FBX files and pre-built animations included in the download.</div>
+              <div class="model-tags">
+                <span class="tag tag-free">Free</span>
+                <span class="tag tag-lowpoly">Low Poly</span>
+                <span class="tag tag-rigged">FBX + Anims</span>
+              </div>
+            </div>
+            <a class="model-link" href="https://sketchfab.com/3d-models/free-test-character-asuna-cc63f3c" target="_blank" rel="noopener">⬡ Open on Sketchfab</a>
+          </div>
+          <div class="sketchfab-embed" id="embed-asuna">
+            <div class="embed-placeholder" onclick="loadEmbed('embed-asuna','cc63f3c1a2b34d5e6f7a8b9c0d1e2f3a')">
+              <div class="play-icon">▶</div>
+              <div class="play-label">Load 3D Viewer</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ SECTION 3: Base Models ══ -->
         <div class="anime-section-label">🛠️ Base / Utility Models — Free &amp; Highly Useful</div>
-        <div class="anime-grid">
 
-          <div class="anime-card">
-            <div class="anime-card-num">Model 05</div>
-            <div class="anime-card-title">Genshin-Style Anime Female Base Mesh</div>
-            <div class="anime-card-author">by David Onizaki</div>
-            <div class="anime-card-desc">A Blender-ready base mesh with shape keys to easily modify arms, legs, bust, hips, neck, shoulders, and face. Includes an anime-based shader for authentic stylized rendering.</div>
-            <div class="anime-card-tags">
-              <span class="tag tag-free">Free</span>
-              <span class="tag tag-blender">Blender</span>
-              <span class="tag tag-base">Base Mesh</span>
-              <span class="tag tag-rigged">Shape Keys</span>
+        <!-- Genshin Base -->
+        <div class="model-viewer-card">
+          <div class="model-viewer-header">
+            <div class="model-viewer-header-left">
+              <span class="model-badge">Model 05</span>
+              <div class="model-title">Genshin-Style Anime Female Base Mesh</div>
+              <div class="model-author">by David Onizaki</div>
+              <div class="model-desc">A Blender-ready base mesh with shape keys to modify arms, legs, bust, hips, neck, shoulders, and face. Includes an anime-based shader for authentic stylized rendering.</div>
+              <div class="model-tags">
+                <span class="tag tag-free">Free</span>
+                <span class="tag tag-blender">Blender</span>
+                <span class="tag tag-base">Base Mesh</span>
+                <span class="tag tag-rigged">Shape Keys</span>
+              </div>
             </div>
-            <a class="anime-card-link" href="https://sketchfab.com/3d-models/genshin-style-anime-female-base-mesh" target="_blank" rel="noopener">⬡ View on Sketchfab</a>
+            <a class="model-link" href="https://sketchfab.com/3d-models/genshin-style-anime-female-base-mesh" target="_blank" rel="noopener">⬡ Open on Sketchfab</a>
           </div>
-
-          <div class="anime-card">
-            <div class="anime-card-num">Model 06</div>
-            <div class="anime-card-title">Anime Female Character Blank (IK Rig + Shape Keys)</div>
-            <div class="anime-card-author">by Atokia</div>
-            <div class="anime-card-desc">A mid-poly base model with a clean mesh, face shape keys for many animations, and blanks inside the head for blush and expression effects. Suitable for most classic anime character designs.</div>
-            <div class="anime-card-tags">
-              <span class="tag tag-free">Free</span>
-              <span class="tag tag-rigged">IK Rig</span>
-              <span class="tag tag-base">Base Mesh</span>
-              <span class="tag tag-rigged">Shape Keys</span>
+          <div class="sketchfab-embed" id="embed-genshin">
+            <div class="embed-placeholder" onclick="loadEmbed('embed-genshin','a1b2c3d4e5f64a5b6c7d8e9f0a1b2c3d')">
+              <div class="play-icon">▶</div>
+              <div class="play-label">Load 3D Viewer</div>
             </div>
-            <a class="anime-card-link" href="https://sketchfab.com/3d-models/anime-female-character-blank" target="_blank" rel="noopener">⬡ View on Sketchfab</a>
           </div>
-
         </div>
 
-        <!-- SECTION 3: Collections -->
+        <!-- Anime Female Blank -->
+        <div class="model-viewer-card">
+          <div class="model-viewer-header">
+            <div class="model-viewer-header-left">
+              <span class="model-badge">Model 06</span>
+              <div class="model-title">Anime Female Character Blank (IK Rig + Shape Keys)</div>
+              <div class="model-author">by Atokia</div>
+              <div class="model-desc">A mid-poly base model with a clean mesh, face shape keys for many animations, and blanks inside the head for blush and expression effects. Suitable for most classic anime character designs.</div>
+              <div class="model-tags">
+                <span class="tag tag-free">Free</span>
+                <span class="tag tag-rigged">IK Rig</span>
+                <span class="tag tag-base">Base Mesh</span>
+                <span class="tag tag-rigged">Shape Keys</span>
+              </div>
+            </div>
+            <a class="model-link" href="https://sketchfab.com/3d-models/anime-female-character-blank" target="_blank" rel="noopener">⬡ Open on Sketchfab</a>
+          </div>
+          <div class="sketchfab-embed" id="embed-blank">
+            <div class="embed-placeholder" onclick="loadEmbed('embed-blank','b2c3d4e5f6a74b5c6d7e8f9a0b1c2d3e')">
+              <div class="play-icon">▶</div>
+              <div class="play-label">Load 3D Viewer</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ SECTION 4: Collections ══ -->
         <div class="anime-section-label">📦 Collections to Browse</div>
         <div class="anime-collection-grid">
-
           <div class="anime-collection-card">
             <div class="col-title">DomineSama's Free 2D-Style Anime Collection</div>
-            <div class="col-desc">A massive curated collection of free downloadable anime characters in 2D-influenced 3D style. One of the largest free anime model libraries on Sketchfab.</div>
+            <div class="col-desc">A massive curated collection of free downloadable anime characters in 2D-influenced 3D style — one of the largest free anime model libraries on Sketchfab.</div>
             <a href="https://sketchfab.com/DomineSama/collections" target="_blank" rel="noopener">⬡ Browse Collection →</a>
           </div>
-
           <div class="anime-collection-card">
             <div class="col-title">Sketchfab #anime-3d Tag</div>
             <div class="col-desc">Browse all free anime 3D models sorted by likes across the entire Sketchfab platform. Filter by "Free" and "Downloadable" for best results.</div>
             <a href="https://sketchfab.com/tags/anime-3d" target="_blank" rel="noopener">⬡ Browse Tag →</a>
           </div>
-
           <div class="anime-collection-card">
             <div class="col-title">Character-Specific Tags</div>
             <div class="col-desc">Search #nezuko · #rem · #mikasa · #asuna · #zero-two-anime directly on Sketchfab and filter by "Free" for character-targeted results.</div>
             <a href="https://sketchfab.com/tags/nezuko" target="_blank" rel="noopener">⬡ Search Tags →</a>
           </div>
-
         </div>
 
       </div>
@@ -570,19 +664,12 @@
     const email    = document.getElementById('login-email').value.trim();
     const password = document.getElementById('login-pass').value;
     const errEl    = document.getElementById('login-error');
-
     const res  = await fetch('/api/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
     });
     const data = await res.json();
-
-    if (!data.ok) {
-      errEl.textContent = '⚠ ' + data.error;
-      errEl.classList.add('show');
-      return;
-    }
+    if (!data.ok) { errEl.textContent = '⚠ ' + data.error; errEl.classList.add('show'); return; }
     errEl.classList.remove('show');
     currentEmail = email;
     document.getElementById('header-user').textContent = email;
@@ -622,11 +709,24 @@
     if (!isOpen) { sub.classList.add('open'); arrow.classList.add('open'); parent.classList.add('active'); }
   }
 
+  // ── SKETCHFAB EMBED LOADER ──
+  // Only the Tsunade model ID is confirmed. Others use placeholder IDs — replace with real ones from each Sketchfab URL.
+  function loadEmbed(containerId, modelId) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = `<iframe
+      title="Sketchfab 3D Model"
+      src="https://sketchfab.com/models/${modelId}/embed?autostart=1&ui_theme=dark&camera=0"
+      allow="autoplay; fullscreen; xr-spatial-tracking"
+      allowfullscreen
+      mozallowfullscreen="true"
+      webkitallowfullscreen="true">
+    </iframe>`;
+  }
+
   // ── TOAST ──
   function toast(msg, type = 'success') {
     const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.className = 'show ' + type;
+    t.textContent = msg; t.className = 'show ' + type;
     setTimeout(() => { t.className = ''; }, 3000);
   }
 
@@ -645,69 +745,50 @@
     if (!entries.length) return '<div class="empty-state"><div class="big-icon">📋</div><p>No students available</p></div>';
     const rows = entries.map(([name, marks]) => {
       const g = getGrade(marks);
-      return `<tr>
-        <td>${name}</td>
-        <td>${marks}</td>
-        <td><span class="grade-badge grade-${g}">${g === 'F' ? 'Fail' : g}</span></td>
-      </tr>`;
+      return `<tr><td>${name}</td><td>${marks}</td><td><span class="grade-badge grade-${g}">${g === 'F' ? 'Fail' : g}</span></td></tr>`;
     }).join('');
     return `<table><thead><tr><th>Name</th><th>Marks</th><th>Grade</th></tr></thead><tbody>${rows}</tbody></table>`;
   }
 
   // ── API HELPERS ──
   async function api(path, body = {}) {
-    const res = await fetch(path, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
-    });
+    const res = await fetch(path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
     return res.json();
   }
-  async function apiGet(path) {
-    const res = await fetch(path);
-    return res.json();
-  }
+  async function apiGet(path) { return (await fetch(path)).json(); }
 
   // ── DASHBOARD ──
   async function refreshDashboard() {
-    const data     = await apiGet('/api/students');
+    const data = await apiGet('/api/students');
     const students = data.students;
-    const count    = Object.keys(students).length;
-    const values   = Object.values(students);
-    const avg      = count ? (values.reduce((a, b) => a + b, 0) / count).toFixed(2) : '—';
-    const topper   = count ? Object.entries(students).reduce((a, b) => b[1] > a[1] ? b : a) : null;
-    const passing  = values.filter(m => m >= 35).length;
-
+    const count = Object.keys(students).length;
+    const values = Object.values(students);
+    const avg = count ? (values.reduce((a, b) => a + b, 0) / count).toFixed(2) : '—';
+    const topper = count ? Object.entries(students).reduce((a, b) => b[1] > a[1] ? b : a) : null;
+    const passing = values.filter(m => m >= 35).length;
     document.getElementById('stats-grid').innerHTML = `
       <div class="stat-card"><div class="stat-label">Total Students</div><div class="stat-value">${count}</div></div>
       <div class="stat-card"><div class="stat-label">Class Average</div><div class="stat-value">${avg}</div><div class="stat-sub">marks</div></div>
       <div class="stat-card"><div class="stat-label">Topper</div><div class="stat-value" style="font-size:18px">${topper ? topper[0] : '—'}</div><div class="stat-sub">${topper ? topper[1] + ' marks' : ''}</div></div>
-      <div class="stat-card"><div class="stat-label">Passing Students</div><div class="stat-value">${passing}</div><div class="stat-sub">out of ${count}</div></div>
-    `;
+      <div class="stat-card"><div class="stat-label">Passing Students</div><div class="stat-value">${passing}</div><div class="stat-sub">out of ${count}</div></div>`;
     document.getElementById('dashboard-table-wrap').innerHTML = buildTable(students);
   }
 
-  // ── ADD STUDENT ──
   async function addStudent() {
-    const name  = document.getElementById('add-name').value.trim();
+    const name = document.getElementById('add-name').value.trim();
     const marks = parseInt(document.getElementById('add-marks').value);
     if (!name) { toast('Please enter student name', 'error'); return; }
     if (isNaN(marks) || marks < 0 || marks > 100) { toast('Please enter valid marks (0–100)', 'error'); return; }
     const data = await api('/api/add_student', { name, marks });
-    if (data.ok) {
-      toast(`Student "${name}" added successfully!`, 'success');
-      document.getElementById('add-name').value  = '';
-      document.getElementById('add-marks').value = '';
-    } else { toast(data.error, 'error'); }
+    if (data.ok) { toast(`Student "${name}" added successfully!`, 'success'); document.getElementById('add-name').value = ''; document.getElementById('add-marks').value = ''; }
+    else { toast(data.error, 'error'); }
   }
 
-  // ── SHOW ALL ──
   async function renderShowAll() {
     const data = await apiGet('/api/students');
     document.getElementById('show-all-wrap').innerHTML = buildTable(data.students);
   }
 
-  // ── FIND TOPPER ──
   async function findTopper() {
     const data = await apiGet('/api/find_topper');
     if (!data.ok) { toast(data.error, 'error'); return; }
@@ -715,45 +796,34 @@
     document.getElementById('topper-result').classList.add('show');
   }
 
-  // ── DELETE STUDENT ──
   async function deleteStudent() {
     const name = document.getElementById('del-name').value.trim();
     if (!name) { toast('Please enter student name', 'error'); return; }
     const data = await api('/api/delete_student', { name });
-    if (data.ok) {
-      toast(`Student "${name}" deleted successfully`, 'success');
-      document.getElementById('del-name').value = '';
-    } else { toast(data.error, 'error'); }
+    if (data.ok) { toast(`Student "${name}" deleted successfully`, 'success'); document.getElementById('del-name').value = ''; }
+    else { toast(data.error, 'error'); }
   }
 
-  // ── UPDATE MARKS ──
   async function updateMarks() {
-    const name  = document.getElementById('upd-name').value.trim();
+    const name = document.getElementById('upd-name').value.trim();
     const marks = parseInt(document.getElementById('upd-marks').value);
     if (!name) { toast('Please enter student name', 'error'); return; }
     if (isNaN(marks) || marks < 0 || marks > 100) { toast('Please enter valid marks (0–100)', 'error'); return; }
     const data = await api('/api/update_marks', { name, marks });
-    if (data.ok) {
-      toast(`Marks updated for "${name}"`, 'success');
-      document.getElementById('upd-name').value  = '';
-      document.getElementById('upd-marks').value = '';
-    } else { toast(data.error, 'error'); }
+    if (data.ok) { toast(`Marks updated for "${name}"`, 'success'); document.getElementById('upd-name').value = ''; document.getElementById('upd-marks').value = ''; }
+    else { toast(data.error, 'error'); }
   }
 
-  // ── CHECK GRADE ──
   async function checkGrade() {
     const name = document.getElementById('grade-name').value.trim();
     if (!name) { toast('Please enter student name', 'error'); return; }
     const data = await api('/api/check_grade', { name });
     if (!data.ok) { toast(data.error, 'error'); return; }
     const g = data.grade;
-    const label = g === 'F' ? 'Fail' : g + ' Grade';
-    document.getElementById('grade-value').innerHTML =
-      `${name} — ${data.marks} marks &nbsp;<span class="grade-badge grade-${g}">${label}</span>`;
+    document.getElementById('grade-value').innerHTML = `${name} — ${data.marks} marks &nbsp;<span class="grade-badge grade-${g}">${g === 'F' ? 'Fail' : g + ' Grade'}</span>`;
     document.getElementById('grade-result').classList.add('show');
   }
 
-  // ── CALCULATE AVERAGE ──
   async function calcAverage() {
     const data = await apiGet('/api/average');
     if (!data.ok) { toast(data.error, 'error'); return; }

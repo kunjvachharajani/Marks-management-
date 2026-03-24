@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Login — Marks Management</title>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
@@ -9,15 +9,15 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:       #0d0f14;
-      --card:     #13161e;
-      --border:   #1f2330;
-      --accent:   #6c63ff;
-      --accent2:  #ff6584;
-      --text:     #e8eaf0;
-      --muted:    #6b7280;
-      --success:  #34d399;
-      --error:    #f87171;
+      --bg:      #0d0f14;
+      --card:    #13161e;
+      --border:  #1f2330;
+      --accent:  #6c63ff;
+      --accent2: #ff6584;
+      --text:    #e8eaf0;
+      --muted:   #6b7280;
+      --success: #34d399;
+      --error:   #f87171;
     }
 
     body {
@@ -31,35 +31,29 @@
       overflow: hidden;
     }
 
-    /* animated background blobs */
-    .bg-blob {
+    /* Three.js canvas sits behind everything */
+    #bg-canvas {
       position: fixed;
-      border-radius: 50%;
-      filter: blur(80px);
-      opacity: 0.18;
-      animation: float 8s ease-in-out infinite;
-      pointer-events: none;
-    }
-    .blob1 { width: 400px; height: 400px; background: var(--accent);  top: -100px; left: -100px; animation-delay: 0s; }
-    .blob2 { width: 300px; height: 300px; background: var(--accent2); bottom: -80px; right: -80px; animation-delay: 3s; }
-    @keyframes float {
-      0%,100% { transform: translateY(0px) scale(1); }
-      50%      { transform: translateY(-30px) scale(1.05); }
+      inset: 0;
+      z-index: 0;
     }
 
+    /* ── CARD ── */
     .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 20px;
+      background: rgba(19, 22, 30, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 24px;
       padding: 48px 40px;
       width: 100%;
       max-width: 420px;
       position: relative;
       z-index: 1;
-      animation: slideUp 0.5s cubic-bezier(0.16,1,0.3,1) both;
+      animation: slideUp 0.6s cubic-bezier(0.16,1,0.3,1) both;
     }
     @keyframes slideUp {
-      from { opacity: 0; transform: translateY(30px); }
+      from { opacity: 0; transform: translateY(32px); }
       to   { opacity: 1; transform: translateY(0); }
     }
 
@@ -90,11 +84,7 @@
       line-height: 1.2;
       margin-bottom: 6px;
     }
-    .subtitle {
-      color: var(--muted);
-      font-size: 14px;
-      margin-bottom: 36px;
-    }
+    .subtitle { color: var(--muted); font-size: 14px; margin-bottom: 36px; }
 
     label {
       display: block;
@@ -108,7 +98,7 @@
 
     input {
       width: 100%;
-      background: var(--bg);
+      background: rgba(13,15,20,0.8);
       border: 1px solid var(--border);
       border-radius: 10px;
       padding: 13px 16px;
@@ -156,18 +146,14 @@
       font-size: 14px;
       color: var(--muted);
     }
-    .footer-link a {
-      color: var(--accent);
-      text-decoration: none;
-      font-weight: 500;
-    }
+    .footer-link a { color: var(--accent); text-decoration: none; font-weight: 500; }
     .footer-link a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
 
-  <div class="bg-blob blob1"></div>
-  <div class="bg-blob blob2"></div>
+  <!-- 3D Canvas Background -->
+  <canvas id="bg-canvas"></canvas>
 
   <div class="card">
     <div class="logo">Marks System</div>
@@ -175,10 +161,10 @@
     <p class="subtitle">Sign in to continue to your dashboard</p>
 
     <label for="email">Email Address</label>
-    <input type="email" id="email" placeholder="you@gmail.com" />
+    <input type="email" id="email" placeholder="you@gmail.com"/>
 
     <label for="password">Password</label>
-    <input type="password" id="password" placeholder="••••••••" />
+    <input type="password" id="password" placeholder="••••••••"/>
 
     <button class="btn" onclick="handleLogin()">Sign In →</button>
 
@@ -189,7 +175,132 @@
     </div>
   </div>
 
+  <!-- Three.js via CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script>
+    // ════════════════════════════════════════
+    //  THREE.JS — FLOATING 3D SCENE
+    // ════════════════════════════════════════
+    const canvas   = document.getElementById('bg-canvas');
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    const scene  = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.z = 18;
+
+    // ── LIGHTS ──
+    const ambLight = new THREE.AmbientLight(0x6c63ff, 0.4);
+    scene.add(ambLight);
+
+    const pointLight1 = new THREE.PointLight(0x6c63ff, 2, 40);
+    pointLight1.position.set(10, 10, 10);
+    scene.add(pointLight1);
+
+    const pointLight2 = new THREE.PointLight(0xff6584, 1.5, 40);
+    pointLight2.position.set(-10, -8, 5);
+    scene.add(pointLight2);
+
+    const pointLight3 = new THREE.PointLight(0x34d399, 1, 30);
+    pointLight3.position.set(0, 10, -5);
+    scene.add(pointLight3);
+
+    // ── MATERIALS ──
+    const materials = [
+      new THREE.MeshStandardMaterial({ color: 0x6c63ff, wireframe: false, metalness: 0.3, roughness: 0.4 }),
+      new THREE.MeshStandardMaterial({ color: 0xff6584, wireframe: false, metalness: 0.3, roughness: 0.5 }),
+      new THREE.MeshStandardMaterial({ color: 0x34d399, wireframe: false, metalness: 0.4, roughness: 0.3 }),
+      new THREE.MeshStandardMaterial({ color: 0xfbbf24, wireframe: false, metalness: 0.5, roughness: 0.4 }),
+      new THREE.MeshStandardMaterial({ color: 0x6c63ff, wireframe: true,  opacity: 0.3, transparent: true }),
+      new THREE.MeshStandardMaterial({ color: 0xff6584, wireframe: true,  opacity: 0.4, transparent: true }),
+    ];
+
+    // ── GEOMETRIES ──
+    const geometries = [
+      new THREE.IcosahedronGeometry(1, 0),
+      new THREE.OctahedronGeometry(1, 0),
+      new THREE.TetrahedronGeometry(1, 0),
+      new THREE.DodecahedronGeometry(1, 0),
+      new THREE.TorusGeometry(0.7, 0.25, 8, 12),
+      new THREE.BoxGeometry(1.4, 1.4, 1.4),
+    ];
+
+    // ── SPAWN MESHES ──
+    const meshes = [];
+    const count  = 18;
+
+    for (let i = 0; i < count; i++) {
+      const geo  = geometries[i % geometries.length];
+      const mat  = materials[i % materials.length].clone();
+      const mesh = new THREE.Mesh(geo, mat);
+
+      const spread = 22;
+      mesh.position.set(
+        (Math.random() - 0.5) * spread,
+        (Math.random() - 0.5) * spread * 0.7,
+        (Math.random() - 0.5) * 12 - 4
+      );
+
+      const s = 0.5 + Math.random() * 1.4;
+      mesh.scale.setScalar(s);
+
+      mesh.userData = {
+        rotSpeedX: (Math.random() - 0.5) * 0.012,
+        rotSpeedY: (Math.random() - 0.5) * 0.012,
+        rotSpeedZ: (Math.random() - 0.5) * 0.006,
+        floatSpeed: 0.4 + Math.random() * 0.6,
+        floatAmp:   0.3 + Math.random() * 0.5,
+        floatOffset:Math.random() * Math.PI * 2,
+        originY:    mesh.position.y,
+      };
+
+      scene.add(mesh);
+      meshes.push(mesh);
+    }
+
+    // ── PARALLAX ──
+    let mouseX = 0, mouseY = 0;
+    document.addEventListener('mousemove', e => {
+      mouseX = (e.clientX / window.innerWidth  - 0.5) * 2;
+      mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+    });
+
+    // ── ANIMATION LOOP ──
+    const clock = new THREE.Clock();
+
+    function animate() {
+      requestAnimationFrame(animate);
+      const t = clock.getElapsedTime();
+
+      meshes.forEach(m => {
+        const d = m.userData;
+        m.rotation.x += d.rotSpeedX;
+        m.rotation.y += d.rotSpeedY;
+        m.rotation.z += d.rotSpeedZ;
+        // gentle float
+        m.position.y = d.originY + Math.sin(t * d.floatSpeed + d.floatOffset) * d.floatAmp;
+      });
+
+      // subtle camera parallax following mouse
+      camera.position.x += (mouseX * 1.5 - camera.position.x) * 0.03;
+      camera.position.y += (-mouseY * 1.0 - camera.position.y) * 0.03;
+      camera.lookAt(scene.position);
+
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    // ── RESIZE ──
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    // ════════════════════════════════════════
+    //  LOGIN LOGIC
+    // ════════════════════════════════════════
     async function handleLogin() {
       const email    = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
@@ -199,7 +310,7 @@
       msg.textContent = '';
 
       if (!email || !password) {
-        msg.className = 'msg error';
+        msg.className   = 'msg error';
         msg.textContent = 'Please fill in all fields.';
         return;
       }
@@ -212,18 +323,15 @@
       const data = await res.json();
 
       if (data.ok) {
-        msg.className = 'msg success';
+        msg.className   = 'msg success';
         msg.textContent = 'Login successful! Redirecting...';
-        setTimeout(() => {
-          window.location.href = data.redirect;
-        }, 800);
+        setTimeout(() => window.location.href = data.redirect, 800);
       } else {
-        msg.className = 'msg error';
+        msg.className   = 'msg error';
         msg.textContent = data.error || 'Login failed.';
       }
     }
 
-    // allow Enter key to submit
     document.addEventListener('keydown', e => {
       if (e.key === 'Enter') handleLogin();
     });
