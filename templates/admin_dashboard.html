@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard — Marks Management</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #0d0f14;
+      --card:    #13161e;
+      --border:  #1f2330;
+      --accent:  #6c63ff;
+      --accent2: #ff6584;
+      --text:    #e8eaf0;
+      --muted:   #6b7280;
+      --success: #34d399;
+      --error:   #f87171;
+      --warn:    #fbbf24;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 16px;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .nav-logo span {
+      background: var(--accent);
+      color: #fff;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+    }
+    .nav-right { display: flex; align-items: center; gap: 16px; }
+    .nav-email { font-size: 13px; color: var(--muted); }
+    .btn-logout {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 7px 16px;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-logout:hover { border-color: var(--error); color: var(--error); }
+
+    /* ── MAIN LAYOUT ── */
+    .main { max-width: 1100px; margin: 0 auto; padding: 36px 24px; }
+
+    .page-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 26px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+    .page-subtitle { color: var(--muted); font-size: 14px; margin-bottom: 32px; }
+
+    /* ── STATS ROW ── */
+    .stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 32px; }
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px 24px;
+    }
+    .stat-label { font-size: 12px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+    .stat-value { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; }
+    .stat-value.accent  { color: var(--accent); }
+    .stat-value.success { color: var(--success); }
+    .stat-value.warn    { color: var(--warn); }
+
+    /* ── TWO COLUMN ── */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1.6fr; gap: 20px; margin-bottom: 24px; }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+    }
+    .card-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* ── FORM ── */
+    .form-group { margin-bottom: 14px; }
+    .form-group label {
+      display: block;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .form-group input {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 11px 14px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-group input:focus { border-color: var(--accent); }
+    .form-group input::placeholder { color: var(--muted); }
+
+    .btn-primary {
+      width: 100%;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 12px;
+      font-family: 'Syne', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      margin-top: 4px;
+    }
+    .btn-primary:hover { opacity: 0.85; }
+
+    .msg-box {
+      margin-top: 12px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      display: none;
+    }
+    .msg-box.error   { background: rgba(248,113,113,0.1); color: var(--error);   border: 1px solid rgba(248,113,113,0.2); display: block; }
+    .msg-box.success { background: rgba(52,211,153,0.1);  color: var(--success); border: 1px solid rgba(52,211,153,0.2);  display: block; }
+
+    /* ── TABLE ── */
+    .table-wrapper { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    thead th {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(255,255,255,0.025); }
+    tbody td { padding: 13px 14px; font-size: 14px; }
+
+    .grade-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-family: 'Syne', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .grade-A { background: rgba(52,211,153,0.15);  color: #34d399; }
+    .grade-B { background: rgba(96,165,250,0.15);  color: #60a5fa; }
+    .grade-C { background: rgba(251,191,36,0.15);  color: #fbbf24; }
+    .grade-D { background: rgba(251,146,60,0.15);  color: #fb923c; }
+    .grade-F { background: rgba(248,113,113,0.15); color: #f87171; }
+
+    .action-btn {
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      margin-right: 4px;
+      transition: opacity 0.2s;
+    }
+    .action-btn:hover { opacity: 0.75; }
+    .btn-edit   { background: rgba(108,99,255,0.15); color: var(--accent); }
+    .btn-delete { background: rgba(248,113,113,0.12); color: var(--error); }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
+      .stats { grid-template-columns: 1fr; }
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav>
+    <div class="nav-logo">
+      Marks Management
+      <span>ADMIN</span>
+    </div>
+    <div class="nav-right">
+      <span class="nav-email" id="adminEmail">—</span>
+      <button class="btn-logout" onclick="logout()">Sign Out</button>
+    </div>
+  </nav>
+
+  <div class="main">
+    <div class="page-title">Admin Dashboard 🛡️</div>
+    <p class="page-subtitle">Manage all students, marks, and grades from here.</p>
+
+    <!-- STATS -->
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-label">Total Students</div>
+        <div class="stat-value accent" id="statTotal">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Class Average</div>
+        <div class="stat-value success" id="statAvg">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Topper</div>
+        <div class="stat-value warn" id="statTopper">—</div>
+      </div>
+    </div>
+
+    <!-- ADD STUDENT + TABLE -->
+    <div class="grid-2">
+
+      <!-- ADD STUDENT FORM -->
+      <div>
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-title">➕ Add Student</div>
+          <div class="form-group">
+            <label>Student Name</label>
+            <input type="text" id="addName" placeholder="e.g. Rahul Shah"/>
+          </div>
+          <div class="form-group">
+            <label>Marks (0–100)</label>
+            <input type="number" id="addMarks" placeholder="e.g. 85" min="0" max="100"/>
+          </div>
+          <button class="btn-primary" onclick="addStudent()">Add Student</button>
+          <div id="addMsg" class="msg-box"></div>
+        </div>
+
+        <!-- UPDATE MARKS -->
+        <div class="card">
+          <div class="card-title">✏️ Update Marks</div>
+          <div class="form-group">
+            <label>Student Name</label>
+            <input type="text" id="updateName" placeholder="Exact name"/>
+          </div>
+          <div class="form-group">
+            <label>New Marks (0–100)</label>
+            <input type="number" id="updateMarks" placeholder="e.g. 90" min="0" max="100"/>
+          </div>
+          <button class="btn-primary" onclick="updateMarks()">Update Marks</button>
+          <div id="updateMsg" class="msg-box"></div>
+        </div>
+      </div>
+
+      <!-- STUDENTS TABLE -->
+      <div class="card">
+        <div class="card-title">👨‍🎓 All Students</div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Marks</th>
+                <th>Grade</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="studentTable">
+              <tr><td colspan="5"><div class="empty-state">Loading students...</div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // ── Load page data ──
+    window.onload = async () => {
+      const res  = await fetch('/api/me');
+      const data = await res.json();
+      if (data.email) document.getElementById('adminEmail').textContent = data.email;
+      loadStudents();
+      loadStats();
+    };
+
+    async function loadStudents() {
+      const res  = await fetch('/api/students');
+      const data = await res.json();
+      const tbody = document.getElementById('studentTable');
+
+      if (!data.students || Object.keys(data.students).length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state">No students yet. Add one! 👆</div></td></tr>`;
+        return;
+      }
+
+      let html = '';
+      let i = 1;
+      for (const [name, marks] of Object.entries(data.students)) {
+        const grade = getGrade(marks);
+        html += `
+          <tr>
+            <td style="color:var(--muted)">${i++}</td>
+            <td><strong>${name}</strong></td>
+            <td>${marks}</td>
+            <td><span class="grade-badge grade-${grade}">${grade}</span></td>
+            <td>
+              <button class="action-btn btn-edit"   onclick="prefillUpdate('${name}', ${marks})">Edit</button>
+              <button class="action-btn btn-delete" onclick="deleteStudent('${name}')">Delete</button>
+            </td>
+          </tr>`;
+      }
+      tbody.innerHTML = html;
+    }
+
+    async function loadStats() {
+      const [avgRes, topRes, stuRes] = await Promise.all([
+        fetch('/api/average'),
+        fetch('/api/find_topper'),
+        fetch('/api/students')
+      ]);
+      const avg = await avgRes.json();
+      const top = await topRes.json();
+      const stu = await stuRes.json();
+
+      document.getElementById('statTotal').textContent  = stu.students ? Object.keys(stu.students).length : 0;
+      document.getElementById('statAvg').textContent    = avg.ok ? avg.average : '—';
+      document.getElementById('statTopper').textContent = top.ok ? `${top.name} (${top.marks})` : '—';
+    }
+
+    function getGrade(marks) {
+      if (marks >= 90) return 'A';
+      if (marks >= 75) return 'B';
+      if (marks >= 50) return 'C';
+      if (marks >= 35) return 'D';
+      return 'F';
+    }
+
+    function prefillUpdate(name, marks) {
+      document.getElementById('updateName').value  = name;
+      document.getElementById('updateMarks').value = marks;
+      document.getElementById('updateName').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    async function addStudent() {
+      const name  = document.getElementById('addName').value.trim();
+      const marks = document.getElementById('addMarks').value;
+      const msg   = document.getElementById('addMsg');
+      msg.className = 'msg-box';
+
+      const res  = await fetch('/api/add_student', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, marks })
+      });
+      const data = await res.json();
+
+      if (data.ok) {
+        msg.className = 'msg-box success';
+        msg.textContent = data.message;
+        document.getElementById('addName').value  = '';
+        document.getElementById('addMarks').value = '';
+        loadStudents(); loadStats();
+      } else {
+        msg.className = 'msg-box error';
+        msg.textContent = data.error;
+      }
+    }
+
+    async function updateMarks() {
+      const name  = document.getElementById('updateName').value.trim();
+      const marks = document.getElementById('updateMarks').value;
+      const msg   = document.getElementById('updateMsg');
+      msg.className = 'msg-box';
+
+      const res  = await fetch('/api/update_marks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, marks })
+      });
+      const data = await res.json();
+
+      if (data.ok) {
+        msg.className = 'msg-box success';
+        msg.textContent = data.message;
+        loadStudents(); loadStats();
+      } else {
+        msg.className = 'msg-box error';
+        msg.textContent = data.error;
+      }
+    }
+
+    async function deleteStudent(name) {
+      if (!confirm(`Delete student "${name}"?`)) return;
+      const res  = await fetch('/api/delete_student', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name })
+      });
+      const data = await res.json();
+      if (data.ok) { loadStudents(); loadStats(); }
+      else alert(data.error);
+    }
+
+    async function logout() {
+      await fetch('/api/logout', { method: 'POST' });
+      window.location.href = '/login';
+    }
+  </script>
+</body>
+</html>

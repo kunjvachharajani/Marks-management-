@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Dashboard — Marks Management</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #0d0f14;
+      --card:    #13161e;
+      --border:  #1f2330;
+      --accent:  #6c63ff;
+      --text:    #e8eaf0;
+      --muted:   #6b7280;
+      --success: #34d399;
+      --error:   #f87171;
+      --warn:    #fbbf24;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+    }
+
+    .bg-blob {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.1;
+      pointer-events: none;
+    }
+    .blob1 { width: 500px; height: 500px; background: var(--accent); top: -150px; right: -150px; }
+
+    /* ── NAVBAR ── */
+    nav {
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .nav-logo span {
+      background: var(--success);
+      color: #0d0f14;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+    }
+    .nav-right { display: flex; align-items: center; gap: 16px; }
+    .nav-email { font-size: 13px; color: var(--muted); }
+    .btn-logout {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 7px 16px;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-logout:hover { border-color: var(--error); color: var(--error); }
+
+    /* ── MAIN ── */
+    .main {
+      max-width: 680px;
+      margin: 60px auto;
+      padding: 0 24px;
+    }
+
+    .greeting {
+      font-family: 'Syne', sans-serif;
+      font-size: 30px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+    .greeting-sub { color: var(--muted); font-size: 15px; margin-bottom: 40px; }
+
+    /* ── BIG MARKS CARD ── */
+    .marks-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 20px;
+      animation: slideUp 0.5s cubic-bezier(0.16,1,0.3,1) both;
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .marks-label {
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+    .marks-number {
+      font-family: 'Syne', sans-serif;
+      font-size: 80px;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 4px;
+      transition: color 0.4s;
+    }
+    .marks-outof { color: var(--muted); font-size: 16px; margin-bottom: 28px; }
+
+    /* grade ring */
+    .grade-ring {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      font-family: 'Syne', sans-serif;
+      font-size: 36px;
+      font-weight: 800;
+      margin-bottom: 16px;
+      border: 3px solid currentColor;
+    }
+
+    .grade-remark {
+      font-size: 15px;
+      color: var(--muted);
+    }
+
+    /* Colors by grade */
+    .g-A { color: var(--success); }
+    .g-B { color: #60a5fa; }
+    .g-C { color: var(--warn); }
+    .g-D { color: #fb923c; }
+    .g-F { color: var(--error); }
+
+    /* ── INFO CARDS ── */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .info-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px 24px;
+      animation: slideUp 0.5s cubic-bezier(0.16,1,0.3,1) both;
+      animation-delay: 0.1s;
+    }
+    .info-card .label { font-size: 11px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+    .info-card .value { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 700; }
+
+    /* ── LOOKUP ── */
+    .lookup-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      animation: slideUp 0.5s cubic-bezier(0.16,1,0.3,1) both;
+      animation-delay: 0.15s;
+    }
+    .lookup-card .card-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    .lookup-row { display: flex; gap: 10px; }
+    .lookup-row input {
+      flex: 1;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 11px 14px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .lookup-row input:focus { border-color: var(--accent); }
+    .lookup-row input::placeholder { color: var(--muted); }
+    .lookup-row button {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 11px 20px;
+      font-family: 'Syne', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: opacity 0.2s;
+    }
+    .lookup-row button:hover { opacity: 0.85; }
+
+    .lookup-result {
+      margin-top: 14px;
+      padding: 14px 16px;
+      border-radius: 10px;
+      font-size: 14px;
+      display: none;
+    }
+    .lookup-result.error   { background: rgba(248,113,113,0.1); color: var(--error);   border: 1px solid rgba(248,113,113,0.2); display: block; }
+    .lookup-result.success { background: rgba(52,211,153,0.1);  color: var(--success); border: 1px solid rgba(52,211,153,0.2);  display: block; }
+
+    /* ── NOT FOUND STATE ── */
+    .not-found {
+      text-align: center;
+      padding: 48px 20px;
+      color: var(--muted);
+    }
+    .not-found .big { font-size: 48px; margin-bottom: 12px; }
+    .not-found p { font-size: 15px; }
+  </style>
+</head>
+<body>
+
+  <div class="bg-blob blob1"></div>
+
+  <!-- NAVBAR -->
+  <nav>
+    <div class="nav-logo">
+      Marks Management
+      <span>STUDENT</span>
+    </div>
+    <div class="nav-right">
+      <span class="nav-email" id="studentEmail">—</span>
+      <button class="btn-logout" onclick="logout()">Sign Out</button>
+    </div>
+  </nav>
+
+  <div class="main">
+    <div class="greeting" id="greeting">Hello! 👋</div>
+    <p class="greeting-sub">Here's your academic performance summary.</p>
+
+    <!-- shown when student data found -->
+    <div id="dataSection" style="display:none">
+
+      <div class="marks-card">
+        <div class="marks-label">Your Score</div>
+        <div class="marks-number" id="marksNum">—</div>
+        <div class="marks-outof">out of 100</div>
+        <div class="grade-ring" id="gradeRing">—</div>
+        <div class="grade-remark" id="gradeRemark">—</div>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-card">
+          <div class="label">Student Name</div>
+          <div class="value" id="infoName">—</div>
+        </div>
+        <div class="info-card">
+          <div class="label">Grade</div>
+          <div class="value" id="infoGrade">—</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- shown when student not in system yet -->
+    <div id="notFound" style="display:none">
+      <div class="not-found">
+        <div class="big">🎓</div>
+        <p>Your marks haven't been added yet.<br>Please ask your admin to add you to the system.</p>
+      </div>
+    </div>
+
+    <!-- GRADE LOOKUP -->
+    <div class="lookup-card">
+      <div class="card-title">🔍 Check Any Student Grade</div>
+      <div class="lookup-row">
+        <input type="text" id="lookupName" placeholder="Enter student name..."/>
+        <button onclick="lookupGrade()">Check</button>
+      </div>
+      <div id="lookupResult" class="lookup-result"></div>
+    </div>
+
+  </div>
+
+  <script>
+    const gradeRemarks = {
+      A: 'Outstanding performance! 🌟',
+      B: 'Great job, keep it up! 💪',
+      C: 'Satisfactory, room to grow! 📈',
+      D: 'Needs improvement. You can do it! 🙏',
+      F: 'Please see your teacher for support. 💙'
+    };
+
+    function getGrade(m) {
+      if (m >= 90) return 'A';
+      if (m >= 75) return 'B';
+      if (m >= 50) return 'C';
+      if (m >= 35) return 'D';
+      return 'F';
+    }
+
+    window.onload = async () => {
+      // get logged-in user info
+      const meRes  = await fetch('/api/me');
+      const meData = await meRes.json();
+      if (meData.email) {
+        document.getElementById('studentEmail').textContent = meData.email;
+        const name = meData.email.split('@')[0];
+        document.getElementById('greeting').textContent = `Hello, ${name}! 👋`;
+      }
+
+      // get student's own marks by email or name
+      const res  = await fetch('/api/my_marks');
+      const data = await res.json();
+
+      if (data.ok) {
+        const { name, marks } = data;
+        const grade = getGrade(marks);
+
+        document.getElementById('dataSection').style.display = 'block';
+        document.getElementById('marksNum').textContent      = marks;
+        document.getElementById('infoName').textContent      = name;
+        document.getElementById('infoGrade').textContent     = grade;
+
+        const ring = document.getElementById('gradeRing');
+        ring.textContent = grade;
+        ring.className   = `grade-ring g-${grade}`;
+        document.getElementById('marksNum').className = `marks-number g-${grade}`;
+        document.getElementById('gradeRemark').textContent = gradeRemarks[grade];
+      } else {
+        document.getElementById('notFound').style.display = 'block';
+      }
+    };
+
+    async function lookupGrade() {
+      const name   = document.getElementById('lookupName').value.trim();
+      const result = document.getElementById('lookupResult');
+      result.className = 'lookup-result';
+
+      if (!name) {
+        result.className = 'lookup-result error';
+        result.textContent = 'Please enter a student name.';
+        return;
+      }
+
+      const res  = await fetch('/api/check_grade', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name })
+      });
+      const data = await res.json();
+
+      if (data.ok) {
+        result.className = 'lookup-result success';
+        result.textContent = `${data.name} — Marks: ${data.marks} | Grade: ${data.grade}`;
+      } else {
+        result.className = 'lookup-result error';
+        result.textContent = data.error;
+      }
+    }
+
+    async function logout() {
+      await fetch('/api/logout', { method: 'POST' });
+      window.location.href = '/login';
+    }
+  </script>
+</body>
+</html>

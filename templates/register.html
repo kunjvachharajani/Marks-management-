@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register — Marks Management</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #0d0f14;
+      --card:    #13161e;
+      --border:  #1f2330;
+      --accent:  #6c63ff;
+      --accent2: #ff6584;
+      --text:    #e8eaf0;
+      --muted:   #6b7280;
+      --success: #34d399;
+      --error:   #f87171;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .bg-blob {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.18;
+      animation: float 8s ease-in-out infinite;
+      pointer-events: none;
+    }
+    .blob1 { width: 400px; height: 400px; background: var(--accent2); top: -100px; right: -100px; }
+    .blob2 { width: 300px; height: 300px; background: var(--accent);  bottom: -80px; left: -80px; animation-delay: 3s; }
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-25px); }
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 48px 40px;
+      width: 100%;
+      max-width: 440px;
+      position: relative;
+      z-index: 1;
+      animation: slideUp 0.5s cubic-bezier(0.16,1,0.3,1) both;
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 32px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .logo::before {
+      content: '';
+      display: inline-block;
+      width: 8px; height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+    }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+    .subtitle { color: var(--muted); font-size: 14px; margin-bottom: 36px; }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    input, select {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 13px 16px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      outline: none;
+      transition: border-color 0.2s;
+      margin-bottom: 20px;
+    }
+    input:focus, select:focus { border-color: var(--accent); }
+    input::placeholder { color: var(--muted); }
+
+    /* role selector */
+    .role-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .role-option {
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+    }
+    .role-option:hover { border-color: var(--accent); }
+    .role-option.selected {
+      border-color: var(--accent);
+      background: rgba(108,99,255,0.12);
+    }
+    .role-option .icon { font-size: 22px; margin-bottom: 4px; }
+    .role-option .role-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .role-option .role-desc { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+    .btn {
+      width: 100%;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 14px;
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      transition: opacity 0.2s, transform 0.15s;
+      margin-top: 4px;
+    }
+    .btn:hover  { opacity: 0.88; transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
+
+    .msg {
+      margin-top: 16px;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 14px;
+      display: none;
+    }
+    .msg.error   { background: rgba(248,113,113,0.12); color: var(--error);   border: 1px solid rgba(248,113,113,0.25); display: block; }
+    .msg.success { background: rgba(52,211,153,0.12);  color: var(--success); border: 1px solid rgba(52,211,153,0.25);  display: block; }
+
+    .footer-link {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .footer-link a { color: var(--accent); text-decoration: none; font-weight: 500; }
+    .footer-link a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <div class="bg-blob blob1"></div>
+  <div class="bg-blob blob2"></div>
+
+  <div class="card">
+    <div class="logo">Marks System</div>
+    <h1>Create account ✨</h1>
+    <p class="subtitle">Fill in your details to get started</p>
+
+    <label for="email">Email Address</label>
+    <input type="email" id="email" placeholder="you@gmail.com"/>
+
+    <label for="password">Password <span style="color:var(--muted);font-size:11px">(min 6 characters)</span></label>
+    <input type="password" id="password" placeholder="••••••••"/>
+
+    <label>Select Your Role</label>
+    <div class="role-grid">
+      <div class="role-option" id="role-admin" onclick="selectRole('admin')">
+        <div class="icon">🛡️</div>
+        <div class="role-name">Admin</div>
+        <div class="role-desc">Manage students & marks</div>
+      </div>
+      <div class="role-option selected" id="role-student" onclick="selectRole('student')">
+        <div class="icon">🎓</div>
+        <div class="role-name">Student</div>
+        <div class="role-desc">View your own grades</div>
+      </div>
+    </div>
+
+    <button class="btn" onclick="handleRegister()">Create Account →</button>
+
+    <div id="msg" class="msg"></div>
+
+    <div class="footer-link">
+      Already have an account? <a href="/login">Sign in</a>
+    </div>
+  </div>
+
+  <script>
+    let selectedRole = 'student';
+
+    function selectRole(role) {
+      selectedRole = role;
+      document.querySelectorAll('.role-option').forEach(el => el.classList.remove('selected'));
+      document.getElementById('role-' + role).classList.add('selected');
+    }
+
+    async function handleRegister() {
+      const email    = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const msg      = document.getElementById('msg');
+
+      msg.className = 'msg';
+      msg.textContent = '';
+
+      if (!email || !password) {
+        msg.className = 'msg error';
+        msg.textContent = 'Please fill in all fields.';
+        return;
+      }
+      if (!email.endsWith('@gmail.com')) {
+        msg.className = 'msg error';
+        msg.textContent = 'Email must end with @gmail.com';
+        return;
+      }
+      if (password.length < 6) {
+        msg.className = 'msg error';
+        msg.textContent = 'Password must be at least 6 characters.';
+        return;
+      }
+
+      const res  = await fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, role: selectedRole })
+      });
+      const data = await res.json();
+
+      if (data.ok) {
+        msg.className = 'msg success';
+        msg.textContent = 'Account created! Redirecting to login...';
+        setTimeout(() => window.location.href = '/login', 1500);
+      } else {
+        msg.className = 'msg error';
+        msg.textContent = data.error || 'Registration failed.';
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Marks Management System</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0d0d0d;
+    --surface: #161616;
+    --surface2: #1f1f1f;
+    --border: #2a2a2a;
+    --accent: #c9a84c;
+    --accent2: #e8c97a;
+    --text: #e8e0d0;
+    --muted: #888;
+    --danger: #c0392b;
+    --success: #27ae60;
+    --info: #2980b9;
+    --font: 'Times New Roman', Times, serif;
+  }
+
+  body { background: var(--bg); color: var(--text); font-family: var(--font); min-height: 100vh; }
+
+  /* ── LOGIN ── */
+  #login-wrapper { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+  #login-screen {
+    width: 420px; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 4px; padding: 48px 40px 40px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.7); animation: fadeIn .5s ease;
+  }
+  .login-logo { text-align: center; margin-bottom: 32px; }
+  .login-logo h1 { font-size: 26px; color: var(--accent); letter-spacing: 2px; font-weight: normal; font-style: italic; }
+  .login-logo p { font-size: 12px; color: var(--muted); letter-spacing: 3px; text-transform: uppercase; margin-top: 6px; }
+  .divider-gold { width: 60px; height: 1px; background: var(--accent); margin: 12px auto 0; }
+  .field { margin-bottom: 20px; }
+  .field label { display: block; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+  .field input {
+    width: 100%; background: var(--surface2); border: 1px solid var(--border);
+    color: var(--text); font-family: var(--font); font-size: 15px;
+    padding: 12px 14px; border-radius: 3px; outline: none; transition: border-color .2s;
+  }
+  .field input:focus { border-color: var(--accent); }
+  .btn-primary {
+    width: 100%; background: var(--accent); color: #0d0d0d; border: none;
+    font-family: var(--font); font-size: 14px; font-weight: bold;
+    letter-spacing: 3px; text-transform: uppercase; padding: 14px;
+    border-radius: 3px; cursor: pointer; transition: background .2s, transform .1s; margin-top: 8px;
+  }
+  .btn-primary:hover { background: var(--accent2); }
+  .btn-primary:active { transform: scale(.98); }
+  .error-msg {
+    background: rgba(192,57,43,.15); border: 1px solid var(--danger);
+    color: #e74c3c; padding: 10px 14px; border-radius: 3px;
+    font-size: 13px; margin-bottom: 16px; display: none;
+  }
+  .error-msg.show { display: block; }
+
+  /* ── MAIN APP ── */
+  #app { display: none; width: 100%; min-height: 100vh; flex-direction: column; }
+  #app.active { display: flex; }
+
+  header {
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    padding: 0 40px; height: 60px; display: flex; align-items: center;
+    justify-content: space-between; position: sticky; top: 0; z-index: 100;
+  }
+  .header-title { font-size: 18px; color: var(--accent); font-style: italic; letter-spacing: 1px; }
+  .header-right { display: flex; align-items: center; gap: 16px; }
+  .header-user { font-size: 12px; color: var(--muted); letter-spacing: 1px; }
+  .btn-logout {
+    background: transparent; border: 1px solid var(--border); color: var(--muted);
+    font-family: var(--font); font-size: 11px; letter-spacing: 2px;
+    text-transform: uppercase; padding: 6px 14px; border-radius: 3px; cursor: pointer; transition: all .2s;
+  }
+  .btn-logout:hover { border-color: var(--danger); color: var(--danger); }
+  .main-layout { display: flex; flex: 1; }
+
+  /* ── SIDEBAR ── */
+  aside { width: 240px; background: var(--surface); border-right: 1px solid var(--border); padding: 28px 0; flex-shrink: 0; }
+  .nav-section { margin-bottom: 8px; }
+  .nav-section-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); padding: 0 20px 8px; }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px; padding: 11px 20px;
+    font-size: 14px; color: var(--muted); cursor: pointer; transition: all .15s;
+    border-left: 3px solid transparent;
+  }
+  .nav-item:hover { background: var(--surface2); color: var(--text); }
+  .nav-item.active { background: var(--surface2); color: var(--accent); border-left-color: var(--accent); }
+  .nav-item .icon { font-size: 16px; width: 20px; text-align: center; }
+  .nav-submenu { background: #131313; display: none; }
+  .nav-submenu.open { display: block; }
+  .nav-subitem {
+    display: flex; align-items: center; gap: 8px; padding: 9px 20px 9px 44px;
+    font-size: 13px; color: var(--muted); cursor: pointer; transition: all .15s;
+    border-left: 3px solid transparent;
+  }
+  .nav-subitem:hover { background: var(--surface2); color: var(--text); }
+  .nav-subitem.active { color: var(--accent); border-left-color: var(--accent); }
+  .nav-arrow { margin-left: auto; font-size: 10px; transition: transform .2s; }
+  .nav-arrow.open { transform: rotate(90deg); }
+
+  /* ── CONTENT ── */
+  .content { flex: 1; padding: 36px 48px; overflow-y: auto; animation: fadeIn .3s ease; }
+  .page { display: none; }
+  .page.active { display: block; }
+  .page-header { margin-bottom: 32px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+  .page-header h2 { font-size: 22px; font-weight: normal; color: var(--text); font-style: italic; }
+  .page-header p { font-size: 13px; color: var(--muted); margin-top: 6px; letter-spacing: .5px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 28px 32px; margin-bottom: 24px; }
+  .card h3 { font-size: 15px; font-weight: normal; color: var(--accent); letter-spacing: 1px; margin-bottom: 20px; font-style: italic; }
+  .form-row { margin-bottom: 18px; }
+  .form-row label { display: block; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+  .form-row input {
+    width: 100%; max-width: 400px; background: var(--surface2); border: 1px solid var(--border);
+    color: var(--text); font-family: var(--font); font-size: 15px;
+    padding: 11px 14px; border-radius: 3px; outline: none; transition: border-color .2s;
+  }
+  .form-row input:focus { border-color: var(--accent); }
+  .btn {
+    font-family: var(--font); font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+    padding: 10px 22px; border-radius: 3px; border: none; cursor: pointer;
+    transition: all .2s; display: inline-flex; align-items: center; gap: 6px;
+  }
+  .btn-gold { background: var(--accent); color: #0d0d0d; font-weight: bold; }
+  .btn-gold:hover { background: var(--accent2); }
+  .btn-red { background: transparent; border: 1px solid var(--danger); color: var(--danger); }
+  .btn-red:hover { background: var(--danger); color: white; }
+
+  /* ── TABLE ── */
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); padding: 10px 16px; border-bottom: 1px solid var(--border); text-align: left; font-weight: normal; }
+  td { padding: 13px 16px; border-bottom: 1px solid #1c1c1c; font-family: var(--font); }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--surface2); }
+  .grade-badge { display: inline-block; padding: 3px 10px; border-radius: 2px; font-size: 12px; letter-spacing: 1px; font-weight: bold; }
+  .grade-A { background: rgba(39,174,96,.2); color: #2ecc71; }
+  .grade-B { background: rgba(41,128,185,.2); color: #3498db; }
+  .grade-C { background: rgba(241,196,15,.2); color: #f1c40f; }
+  .grade-D { background: rgba(230,126,34,.2); color: #e67e22; }
+  .grade-F { background: rgba(192,57,43,.2); color: #e74c3c; }
+
+  /* ── STATS ── */
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 28px; }
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 22px 24px; }
+  .stat-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+  .stat-value { font-size: 30px; color: var(--accent); font-style: italic; }
+  .stat-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+  /* ── RESULT BOX ── */
+  .result-box { background: var(--surface2); border: 1px solid var(--border); border-radius: 3px; padding: 18px 22px; margin-top: 20px; display: none; }
+  .result-box.show { display: block; }
+  .result-box .result-label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+  .result-box .result-value { font-size: 22px; color: var(--accent); font-style: italic; }
+
+  /* ── TOAST ── */
+  #toast { position: fixed; bottom: 30px; right: 30px; padding: 14px 22px; border-radius: 4px; font-size: 14px; opacity: 0; transition: opacity .3s; z-index: 999; pointer-events: none; font-family: var(--font); max-width: 340px; }
+  #toast.show { opacity: 1; }
+  #toast.success { background: var(--success); color: white; }
+  #toast.error   { background: var(--danger);  color: white; }
+  #toast.info    { background: var(--info);    color: white; }
+
+  /* ── EMPTY STATE ── */
+  .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); }
+  .empty-state .big-icon { font-size: 48px; margin-bottom: 16px; opacity: .4; }
+  .empty-state p { font-size: 14px; font-style: italic; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+
+<!-- ══════════ LOGIN ══════════ -->
+<div id="login-wrapper">
+  <div id="login-screen">
+    <div class="login-logo">
+      <h1>Marks Management</h1>
+      <p>Academic Portal</p>
+      <div class="divider-gold"></div>
+    </div>
+    <div class="error-msg" id="login-error"></div>
+    <div class="field">
+      <label>Email Address</label>
+      <input type="email" id="login-email" placeholder="example@gmail.com"/>
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="login-pass" placeholder="Min. 6 characters"
+             onkeydown="if(event.key==='Enter') doLogin()"/>
+    </div>
+    <button class="btn-primary" onclick="doLogin()">Sign In</button>
+  </div>
+</div>
+
+<!-- ══════════ MAIN APP ══════════ -->
+<div id="app">
+  <header>
+    <div class="header-title">Marks Management System</div>
+    <div class="header-right">
+      <span class="header-user" id="header-user"></span>
+      <button class="btn-logout" onclick="doLogout()">Logout</button>
+    </div>
+  </header>
+
+  <div class="main-layout">
+
+    <!-- SIDEBAR -->
+    <aside>
+      <div class="nav-section">
+        <div class="nav-item active" id="nav-dashboard" onclick="showPage('dashboard', this)">
+          <span class="icon">◈</span> Dashboard
+        </div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-label">Operations</div>
+
+        <!-- Student Operations -->
+        <div class="nav-item" id="nav-students-parent" onclick="toggleSubmenu('students-sub', 'nav-students-parent')">
+          <span class="icon">👤</span> Student Operations
+          <span class="nav-arrow" id="arrow-students">▶</span>
+        </div>
+        <div class="nav-submenu" id="students-sub">
+          <div class="nav-subitem" onclick="showPage('add-student', this)"><span>✚</span> Add Student</div>
+          <div class="nav-subitem" onclick="showPage('show-all', this)"><span>☰</span> Show All Students</div>
+          <div class="nav-subitem" onclick="showPage('find-topper', this)"><span>★</span> Find Topper</div>
+          <div class="nav-subitem" onclick="showPage('delete-student', this)"><span>✕</span> Delete Student</div>
+          <div class="nav-subitem" onclick="showPage('dashboard', document.getElementById('nav-dashboard'))" style="color:#555;font-size:11px;">↩ Back to Menu</div>
+        </div>
+
+        <!-- Marks Operations -->
+        <div class="nav-item" id="nav-marks-parent" onclick="toggleSubmenu('marks-sub', 'nav-marks-parent')">
+          <span class="icon">📝</span> Marks Operations
+          <span class="nav-arrow" id="arrow-marks">▶</span>
+        </div>
+        <div class="nav-submenu" id="marks-sub">
+          <div class="nav-subitem" onclick="showPage('update-marks', this)"><span>✎</span> Update Marks</div>
+          <div class="nav-subitem" onclick="showPage('check-grade', this)"><span>◉</span> Check Grade</div>
+          <div class="nav-subitem" onclick="showPage('calc-average', this)"><span>∑</span> Calculate Average</div>
+          <div class="nav-subitem" onclick="showPage('dashboard', document.getElementById('nav-dashboard'))" style="color:#555;font-size:11px;">↩ Back to Menu</div>
+        </div>
+
+        <div class="nav-item" onclick="doLogout()">
+          <span class="icon">⏻</span> Exit
+        </div>
+      </div>
+    </aside>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+      <!-- DASHBOARD -->
+      <div class="page active" id="page-dashboard">
+        <div class="page-header"><h2>Dashboard</h2><p>Welcome to Marks Management System</p></div>
+        <div class="stats-grid" id="stats-grid"></div>
+        <div class="card"><h3>All Students</h3><div id="dashboard-table-wrap"></div></div>
+      </div>
+
+      <!-- ADD STUDENT -->
+      <div class="page" id="page-add-student">
+        <div class="page-header"><h2>Add Student</h2><p>Register a new student with their marks (0 – 100)</p></div>
+        <div class="card">
+          <h3>Student Details</h3>
+          <div class="form-row"><label>Student Name</label><input type="text" id="add-name" placeholder="Enter full name"/></div>
+          <div class="form-row"><label>Marks (0 – 100)</label><input type="number" id="add-marks" placeholder="e.g. 85" min="0" max="100"/></div>
+          <button class="btn btn-gold" onclick="addStudent()">✚ Add Student</button>
+        </div>
+      </div>
+
+      <!-- SHOW ALL -->
+      <div class="page" id="page-show-all">
+        <div class="page-header"><h2>Show All Students</h2><p>Complete list of registered students and their marks</p></div>
+        <div class="card"><h3>Student Records</h3><div class="table-wrap" id="show-all-wrap"></div></div>
+      </div>
+
+      <!-- FIND TOPPER -->
+      <div class="page" id="page-find-topper">
+        <div class="page-header"><h2>Find Topper</h2><p>Identifies the student with the highest marks</p></div>
+        <div class="card">
+          <h3>Top Performer</h3>
+          <button class="btn btn-gold" onclick="findTopper()">★ Find Topper</button>
+          <div class="result-box" id="topper-result">
+            <div class="result-label">Topper</div>
+            <div class="result-value" id="topper-value"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DELETE STUDENT -->
+      <div class="page" id="page-delete-student">
+        <div class="page-header"><h2>Delete Student</h2><p>Permanently remove a student record</p></div>
+        <div class="card">
+          <h3>Remove Record</h3>
+          <div class="form-row"><label>Student Name</label><input type="text" id="del-name" placeholder="Enter exact name"/></div>
+          <button class="btn btn-red" onclick="deleteStudent()">✕ Delete Student</button>
+        </div>
+      </div>
+
+      <!-- UPDATE MARKS -->
+      <div class="page" id="page-update-marks">
+        <div class="page-header"><h2>Update Marks</h2><p>Modify the marks of an existing student</p></div>
+        <div class="card">
+          <h3>Edit Marks</h3>
+          <div class="form-row"><label>Student Name</label><input type="text" id="upd-name" placeholder="Enter exact name"/></div>
+          <div class="form-row"><label>New Marks (0 – 100)</label><input type="number" id="upd-marks" placeholder="e.g. 90" min="0" max="100"/></div>
+          <button class="btn btn-gold" onclick="updateMarks()">✎ Update Marks</button>
+        </div>
+      </div>
+
+      <!-- CHECK GRADE -->
+      <div class="page" id="page-check-grade">
+        <div class="page-header"><h2>Check Grade</h2><p>A≥90 · B≥75 · C≥50 · D≥35 · Fail&lt;35</p></div>
+        <div class="card">
+          <h3>Grade Lookup</h3>
+          <div class="form-row"><label>Student Name</label><input type="text" id="grade-name" placeholder="Enter exact name"/></div>
+          <button class="btn btn-gold" onclick="checkGrade()">◉ Check Grade</button>
+          <div class="result-box" id="grade-result">
+            <div class="result-label">Grade</div>
+            <div class="result-value" id="grade-value"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CALCULATE AVERAGE -->
+      <div class="page" id="page-calc-average">
+        <div class="page-header"><h2>Calculate Average</h2><p>Mean marks across all registered students</p></div>
+        <div class="card">
+          <h3>Class Average</h3>
+          <button class="btn btn-gold" onclick="calcAverage()">∑ Calculate Average</button>
+          <div class="result-box" id="avg-result">
+            <div class="result-label">Average Marks</div>
+            <div class="result-value" id="avg-value"></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main-layout -->
+</div><!-- /app -->
+
+<div id="toast"></div>
+
+<script>
+  let currentEmail = '';
+
+  // ── LOGIN ──
+  async function doLogin() {
+    const email    = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-pass').value;
+    const errEl    = document.getElementById('login-error');
+
+    const res  = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+    const data = await res.json();
+
+    if (!data.ok) {
+      errEl.textContent = '⚠ ' + data.error;
+      errEl.classList.add('show');
+      return;
+    }
+    errEl.classList.remove('show');
+    currentEmail = email;
+    document.getElementById('header-user').textContent = email;
+    document.getElementById('login-wrapper').style.display = 'none';
+    document.getElementById('app').classList.add('active');
+    refreshDashboard();
+  }
+
+  async function doLogout() {
+    await fetch('/api/logout', { method: 'POST' });
+    document.getElementById('login-wrapper').style.display = 'flex';
+    document.getElementById('app').classList.remove('active');
+    document.getElementById('login-email').value = '';
+    document.getElementById('login-pass').value  = '';
+  }
+
+  // ── NAVIGATION ──
+  function showPage(id, el) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.querySelectorAll('.nav-subitem').forEach(n => n.classList.remove('active'));
+    if (el) el.classList.add('active');
+    if (id === 'dashboard') refreshDashboard();
+    if (id === 'show-all')  renderShowAll();
+    document.querySelectorAll('.result-box').forEach(r => r.classList.remove('show'));
+  }
+
+  function toggleSubmenu(subId, parentId) {
+    const sub    = document.getElementById(subId);
+    const arrow  = document.getElementById('arrow-' + subId.replace('-sub', ''));
+    const parent = document.getElementById(parentId);
+    const isOpen = sub.classList.contains('open');
+    document.querySelectorAll('.nav-submenu').forEach(s => s.classList.remove('open'));
+    document.querySelectorAll('.nav-arrow').forEach(a => a.classList.remove('open'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    if (!isOpen) { sub.classList.add('open'); arrow.classList.add('open'); parent.classList.add('active'); }
+  }
+
+  // ── TOAST ──
+  function toast(msg, type = 'success') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'show ' + type;
+    setTimeout(() => { t.className = ''; }, 3000);
+  }
+
+  // ── GRADE ──
+  function getGrade(marks) {
+    if (marks >= 90) return 'A';
+    if (marks >= 75) return 'B';
+    if (marks >= 50) return 'C';
+    if (marks >= 35) return 'D';
+    return 'F';
+  }
+
+  // ── TABLE BUILDER ──
+  function buildTable(data) {
+    const entries = Object.entries(data);
+    if (!entries.length) return '<div class="empty-state"><div class="big-icon">📋</div><p>No students available</p></div>';
+    const rows = entries.map(([name, marks]) => {
+      const g = getGrade(marks);
+      return `<tr>
+        <td>${name}</td>
+        <td>${marks}</td>
+        <td><span class="grade-badge grade-${g}">${g === 'F' ? 'Fail' : g}</span></td>
+      </tr>`;
+    }).join('');
+    return `<table><thead><tr><th>Name</th><th>Marks</th><th>Grade</th></tr></thead><tbody>${rows}</tbody></table>`;
+  }
+
+  // ── API HELPERS ──
+  async function api(path, body = {}) {
+    const res = await fetch(path, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    return res.json();
+  }
+  async function apiGet(path) {
+    const res = await fetch(path);
+    return res.json();
+  }
+
+  // ── DASHBOARD ──
+  async function refreshDashboard() {
+    const data     = await apiGet('/api/students');
+    const students = data.students;
+    const count    = Object.keys(students).length;
+    const values   = Object.values(students);
+    const avg      = count ? (values.reduce((a, b) => a + b, 0) / count).toFixed(2) : '—';
+    const topper   = count ? Object.entries(students).reduce((a, b) => b[1] > a[1] ? b : a) : null;
+    const passing  = values.filter(m => m >= 35).length;
+
+    document.getElementById('stats-grid').innerHTML = `
+      <div class="stat-card"><div class="stat-label">Total Students</div><div class="stat-value">${count}</div></div>
+      <div class="stat-card"><div class="stat-label">Class Average</div><div class="stat-value">${avg}</div><div class="stat-sub">marks</div></div>
+      <div class="stat-card"><div class="stat-label">Topper</div><div class="stat-value" style="font-size:18px">${topper ? topper[0] : '—'}</div><div class="stat-sub">${topper ? topper[1] + ' marks' : ''}</div></div>
+      <div class="stat-card"><div class="stat-label">Passing Students</div><div class="stat-value">${passing}</div><div class="stat-sub">out of ${count}</div></div>
+    `;
+    document.getElementById('dashboard-table-wrap').innerHTML = buildTable(students);
+  }
+
+  // ── ADD STUDENT ──
+  async function addStudent() {
+    const name  = document.getElementById('add-name').value.trim();
+    const marks = parseInt(document.getElementById('add-marks').value);
+    if (!name) { toast('Please enter student name', 'error'); return; }
+    if (isNaN(marks) || marks < 0 || marks > 100) { toast('Please enter valid marks (0–100)', 'error'); return; }
+    const data = await api('/api/add_student', { name, marks });
+    if (data.ok) {
+      toast(`Student "${name}" added successfully!`, 'success');
+      document.getElementById('add-name').value  = '';
+      document.getElementById('add-marks').value = '';
+    } else { toast(data.error, 'error'); }
+  }
+
+  // ── SHOW ALL ──
+  async function renderShowAll() {
+    const data = await apiGet('/api/students');
+    document.getElementById('show-all-wrap').innerHTML = buildTable(data.students);
+  }
+
+  // ── FIND TOPPER ──
+  async function findTopper() {
+    const data = await apiGet('/api/find_topper');
+    if (!data.ok) { toast(data.error, 'error'); return; }
+    document.getElementById('topper-value').textContent = `${data.name} — ${data.marks} marks`;
+    document.getElementById('topper-result').classList.add('show');
+  }
+
+  // ── DELETE STUDENT ──
+  async function deleteStudent() {
+    const name = document.getElementById('del-name').value.trim();
+    if (!name) { toast('Please enter student name', 'error'); return; }
+    const data = await api('/api/delete_student', { name });
+    if (data.ok) {
+      toast(`Student "${name}" deleted successfully`, 'success');
+      document.getElementById('del-name').value = '';
+    } else { toast(data.error, 'error'); }
+  }
+
+  // ── UPDATE MARKS ──
+  async function updateMarks() {
+    const name  = document.getElementById('upd-name').value.trim();
+    const marks = parseInt(document.getElementById('upd-marks').value);
+    if (!name) { toast('Please enter student name', 'error'); return; }
+    if (isNaN(marks) || marks < 0 || marks > 100) { toast('Please enter valid marks (0–100)', 'error'); return; }
+    const data = await api('/api/update_marks', { name, marks });
+    if (data.ok) {
+      toast(`Marks updated for "${name}"`, 'success');
+      document.getElementById('upd-name').value  = '';
+      document.getElementById('upd-marks').value = '';
+    } else { toast(data.error, 'error'); }
+  }
+
+  // ── CHECK GRADE ──
+  async function checkGrade() {
+    const name = document.getElementById('grade-name').value.trim();
+    if (!name) { toast('Please enter student name', 'error'); return; }
+    const data = await api('/api/check_grade', { name });
+    if (!data.ok) { toast(data.error, 'error'); return; }
+    const g = data.grade;
+    const label = g === 'F' ? 'Fail' : g + ' Grade';
+    document.getElementById('grade-value').innerHTML =
+      `${name} — ${data.marks} marks &nbsp;<span class="grade-badge grade-${g}">${label}</span>`;
+    document.getElementById('grade-result').classList.add('show');
+  }
+
+  // ── CALCULATE AVERAGE ──
+  async function calcAverage() {
+    const data = await apiGet('/api/average');
+    if (!data.ok) { toast(data.error, 'error'); return; }
+    document.getElementById('avg-value').textContent = `${data.average} marks`;
+    document.getElementById('avg-result').classList.add('show');
+  }
+</script>
+</body>
+</html>
